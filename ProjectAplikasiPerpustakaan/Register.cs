@@ -28,7 +28,54 @@ namespace ProjectAplikasiPerpustakaan
         {
             txtPassword.PasswordChar = '●';
             txtConfirmPassword.PasswordChar = '●';
-            btnRegister.Enabled = false; // Nonaktifkan dulu sampai input lengkap
+            btnRegister.Enabled = false;
+
+            // === Pembatasan Input ===
+
+            // Username: huruf + angka (biasanya tidak pakai spasi)
+            txtUsername.KeyPress += (s, ev) =>
+            {
+                if (!char.IsLetterOrDigit(ev.KeyChar) && ev.KeyChar != '\b')
+                    ev.Handled = true;
+            };
+
+            // Nama Lengkap: huruf, angka, spasi
+            txtNamaLengkap.KeyPress += AllowOnlyAlphanumeric_KeyPress;
+
+            // No HP: hanya angka
+            txtNoHp.KeyPress += AllowOnlyNumbers_KeyPress;
+
+            // Email: huruf, angka, @ . _ - (email butuh simbol tertentu)
+            txtEmail.KeyPress += (s, ev) =>
+            {
+                if (!char.IsLetterOrDigit(ev.KeyChar) &&
+                    "@._-".IndexOf(ev.KeyChar) == -1 &&
+                    ev.KeyChar != '\b')
+                {
+                    ev.Handled = true;
+                }
+            };
+        }
+
+        // Hanya huruf dan angka (Alphanumeric) + spasi opsional
+        private void AllowOnlyAlphanumeric_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Izinkan huruf, angka, spasi, dan tombol Backspace/Delete
+            if (!char.IsLetterOrDigit(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != '\b')
+            {
+                e.Handled = true; // Blokir karakter
+            }
+        }
+
+        // Hanya angka (untuk No HP)
+        private void AllowOnlyNumbers_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
         }
 
         private void EnableRegisterButton()
