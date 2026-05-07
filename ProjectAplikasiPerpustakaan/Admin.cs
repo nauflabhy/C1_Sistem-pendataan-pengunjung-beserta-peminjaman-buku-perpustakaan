@@ -92,6 +92,7 @@ namespace ProjectAplikasiPerpustakaan
         // ================== TOMBOL LOAD DATABASE ==================
         private void btnLoadDatabase_Click(object sender, EventArgs e)
         {
+            txtCariBuku.Clear();
             LoadDataBuku();
         }
 
@@ -180,5 +181,153 @@ namespace ProjectAplikasiPerpustakaan
 
         // Event kosong (bisa dihapus jika tidak dipakai)
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+
+        private void btnTambahBuku_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (TambahBuku formTambah = new TambahBuku())
+                {
+                    // Buka form Tambah Buku sebagai Dialog
+                    DialogResult hasil = formTambah.ShowDialog();
+
+                    // Jika buku berhasil ditambahkan (DialogResult.OK), refresh DataGridView
+                    if (hasil == DialogResult.OK)
+                    {
+                        LoadDataBuku(); // Refresh daftar buku otomatis
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal membuka form Tambah Buku:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnHapusBuku_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Silakan pilih buku yang ingin dihapus terlebih dahulu.",
+                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Ambil data buku yang dipilih
+            DataGridViewRow row = dataGridView1.SelectedRows[0];
+            int idBuku = Convert.ToInt32(row.Cells["id_buku"].Value);
+            string kodeBuku = row.Cells["kode_buku"].Value?.ToString() ?? "-";
+            string judulBuku = row.Cells["judul"].Value?.ToString() ?? "-";
+
+            // Konfirmasi penghapusan
+            DialogResult konfirmasi = MessageBox.Show(
+                $"Anda yakin ingin menghapus buku berikut?\n\n" +
+                $"Kode Buku : {kodeBuku}\n" +
+                $"Judul     : {judulBuku}\n\n" +
+                "Tindakan ini tidak dapat dibatalkan!",
+                "Konfirmasi Hapus Buku",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (konfirmasi != DialogResult.Yes) return;
+
+            // Cek apakah buku sedang dipinjam
+            if (BukuSedangDipinjam(idBuku))
+            {
+                MessageBox.Show("Buku tidak dapat dihapus karena sedang dipinjam atau memiliki pengajuan aktif.",
+                    "Tidak Dapat Dihapus", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = "DELETE FROM BUKU WHERE id_buku = @id_buku";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id_buku", idBuku);
+                        int result = cmd.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show("Buku berhasil dihapus dari database.",
+                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            // Refresh data sesuai dengan pencarian saat ini
+                            CariBukuByKeyword();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menghapus buku:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ================== CEK APAKAH BUKU SEDANG DIPINJAM ==================
+        private bool BukuSedangDipinjam(int idBuku)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+                    string query = @"
+                SELECT COUNT(*) 
+                FROM PEMINJAMAN 
+                WHERE id_buku = @id_buku 
+                AND status IN ('menunggu', 'disetujui', 'dipinjam')";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id_buku", idBuku);
+                        int jumlah = Convert.ToInt32(cmd.ExecuteScalar());
+                        return jumlah > 0;
+                    }
+                }
+            }
+            catch
+            {
+                return true; // Jika error, anggap tidak aman untuk dihapus
+            }
+        }
+
+        private void CariBukuByKeyword()
+        {
+            if (dtBuku == null) return;
+
+            string keyword = txtCariBuku.Text.Trim();
+
+            if (string.IsNullOrEmpty(keyword))
+            {
+                dataGridView1.DataSource = dtBuku;
+            }
+            else
+            {
+                DataView dv = dtBuku.DefaultView;
+                dv.RowFilter = $"judul LIKE '%{keyword}%' " +
+                               $"OR pengarang LIKE '%{keyword}%' " +
+                               $"OR kategori LIKE '%{keyword}%' " +
+                               $"OR kode_buku LIKE '%{keyword}%'";
+                dataGridView1.DataSource = dv;
+            }
+        }
+
+        private void txtCariBuku_TextChanged(object sender, EventArgs e)
+        {
+            CariBukuByKeyword();
+        }
+
+        private void btnCari_Click(object sender, EventArgs e)
+        {
+            CariBukuByKeyword();
+            txtCariBuku.Focus();
+        }
     }
 }
