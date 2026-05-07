@@ -122,25 +122,5 @@ namespace ProjectAplikasiPerpustakaan
                     conn.Close();
             }
         }
-
-        private void btnRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                // Buat instance form Register
-                Register registerForm = new Register();
-
-                // Tampilkan form Register
-                registerForm.Show();
-
-                // Sembunyikan form Login (tidak langsung close agar tidak menutup aplikasi)
-                this.Hide();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal membuka form Register:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
     }
 }

@@ -37,7 +37,6 @@
             this.textPassword = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
-            this.btnRegister = new System.Windows.Forms.LinkLabel();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
@@ -46,11 +45,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(982, 236);
+            this.label1.Location = new System.Drawing.Point(873, 238);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 32);
+            this.label1.Size = new System.Drawing.Size(280, 32);
             this.label1.TabIndex = 0;
-            this.label1.Text = "LOGIN";
+            this.label1.Text = "LOGIN SEBAGAI ADMIN";
             // 
             // label2
             // 
@@ -113,17 +112,6 @@
             this.fileSystemWatcher1.EnableRaisingEvents = true;
             this.fileSystemWatcher1.SynchronizingObject = this;
             // 
-            // btnRegister
-            // 
-            this.btnRegister.AutoSize = true;
-            this.btnRegister.Location = new System.Drawing.Point(997, 448);
-            this.btnRegister.Name = "btnRegister";
-            this.btnRegister.Size = new System.Drawing.Size(69, 20);
-            this.btnRegister.TabIndex = 7;
-            this.btnRegister.TabStop = true;
-            this.btnRegister.Text = "Register";
-            this.btnRegister.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.btnRegister_LinkClicked);
-            // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -136,7 +124,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1805, 827);
-            this.Controls.Add(this.btnRegister);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.textPassword);
             this.Controls.Add(this.txtUsername);
@@ -163,7 +150,6 @@
         private System.Windows.Forms.TextBox textPassword;
         private System.Windows.Forms.Button btnLogin;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
-        private System.Windows.Forms.LinkLabel btnRegister;
         private System.Windows.Forms.ImageList imageList1;
     }
 }
