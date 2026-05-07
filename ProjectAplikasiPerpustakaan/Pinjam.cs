@@ -38,12 +38,33 @@ namespace ProjectAplikasiPerpustakaan
 
         private void Pinjam_Load(object sender, EventArgs e)
         {
-            // Tampilkan info buku (pastikan di form ada label lblKodeBuku & lblJudul)
             lblKodeBuku.Text = kodeBuku;
             lblJudul.Text = judulBuku;
 
-            // Ambil data pengunjung dari DB berdasarkan username (namaPengguna)
+            // Ambil data pengunjung
             AmbilDataPengunjung();
+
+            // ============== BATASI INPUT PADA SETIAP TEXTBOX ==============
+
+            // NIK → Hanya Angka
+            txtNIK.KeyPress += AllowOnlyNumbers_KeyPress;
+            txtNIK.MaxLength = 20; // sesuaikan kebutuhan
+
+            // Nama Lengkap → Huruf, Angka, Spasi
+            txtNamaLengkap.KeyPress += AllowOnlyAlphanumeric_KeyPress;
+            txtNamaLengkap.MaxLength = 100;
+
+            // No HP → Hanya Angka
+            txtNoHp.KeyPress += AllowOnlyNumbers_KeyPress;
+            txtNoHp.MaxLength = 15;
+
+            // Email → Huruf, Angka, @ . _ -
+            txtEmail.KeyPress += AllowEmailCharacters_KeyPress;
+            txtEmail.MaxLength = 80;
+
+            // Perguruan (Universitas/Sekolah) → Huruf, Angka, Spasi
+            txtPerguruan.KeyPress += AllowOnlyAlphanumeric_KeyPress;
+            txtPerguruan.MaxLength = 100;
         }
 
         private void AmbilDataPengunjung()
@@ -294,6 +315,39 @@ namespace ProjectAplikasiPerpustakaan
             CariBuku formCariBuku = new CariBuku(namaPengguna, rolePengguna);
             formCariBuku.Show();
             this.Close();
+        }
+
+        // ================== PEMBATAS INPUT ==================
+
+        // Huruf + Angka + Spasi (untuk Nama, Perguruan)
+        private void AllowOnlyAlphanumeric_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) &&
+                !char.IsWhiteSpace(e.KeyChar) &&
+                e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Hanya Angka (untuk No HP dan NIK)
+        private void AllowOnlyNumbers_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Khusus Email (boleh @ . _ -)
+        private void AllowEmailCharacters_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) &&
+                "@._-".IndexOf(e.KeyChar) == -1 &&
+                e.KeyChar != '\b')
+            {
+                e.Handled = true;
+            }
         }
     }
 }
