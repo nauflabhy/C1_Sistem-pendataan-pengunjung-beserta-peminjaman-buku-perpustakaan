@@ -16,7 +16,7 @@ namespace ProjectAplikasiPerpustakaan
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new LoginMenu());
+            Application.Run(new CariBuku("NamaPengguna", "RolePengguna"));
         }
     }
 }
