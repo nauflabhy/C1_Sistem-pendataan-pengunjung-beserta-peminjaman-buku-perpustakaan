@@ -36,7 +36,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.txtKodeBuku = new System.Windows.Forms.TextBox();
@@ -44,10 +43,9 @@
             this.txtPengarang = new System.Windows.Forms.TextBox();
             this.txtPenerbit = new System.Windows.Forms.TextBox();
             this.txtTahunTerbit = new System.Windows.Forms.TextBox();
-            this.txtKategori = new System.Windows.Forms.TextBox();
-            this.txtStokTotal = new System.Windows.Forms.TextBox();
             this.txtStokTersedia = new System.Windows.Forms.TextBox();
             this.txtLokasi = new System.Windows.Forms.TextBox();
+            this.cmbKategori = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btlBatal
@@ -124,19 +122,10 @@
             this.label7.TabIndex = 8;
             this.label7.Text = "Kategori:";
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(633, 425);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(85, 20);
-            this.label8.TabIndex = 9;
-            this.label8.Text = "Stok Total:";
-            // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(633, 487);
+            this.label9.Location = new System.Drawing.Point(633, 447);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(111, 20);
             this.label9.TabIndex = 10;
@@ -145,7 +134,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(633, 555);
+            this.label10.Location = new System.Drawing.Point(633, 515);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(59, 20);
             this.label10.TabIndex = 11;
@@ -191,25 +180,9 @@
             this.txtTahunTerbit.TabIndex = 16;
             this.txtTahunTerbit.TextChanged += new System.EventHandler(this.txtTahunTerbit_TextChanged);
             // 
-            // txtKategori
-            // 
-            this.txtKategori.Location = new System.Drawing.Point(839, 368);
-            this.txtKategori.Name = "txtKategori";
-            this.txtKategori.Size = new System.Drawing.Size(265, 26);
-            this.txtKategori.TabIndex = 17;
-            this.txtKategori.TextChanged += new System.EventHandler(this.txtKategori_TextChanged);
-            // 
-            // txtStokTotal
-            // 
-            this.txtStokTotal.Location = new System.Drawing.Point(839, 425);
-            this.txtStokTotal.Name = "txtStokTotal";
-            this.txtStokTotal.Size = new System.Drawing.Size(265, 26);
-            this.txtStokTotal.TabIndex = 18;
-            this.txtStokTotal.TextChanged += new System.EventHandler(this.txtStokTotal_TextChanged);
-            // 
             // txtStokTersedia
             // 
-            this.txtStokTersedia.Location = new System.Drawing.Point(839, 487);
+            this.txtStokTersedia.Location = new System.Drawing.Point(839, 447);
             this.txtStokTersedia.Name = "txtStokTersedia";
             this.txtStokTersedia.Size = new System.Drawing.Size(265, 26);
             this.txtStokTersedia.TabIndex = 19;
@@ -217,21 +190,32 @@
             // 
             // txtLokasi
             // 
-            this.txtLokasi.Location = new System.Drawing.Point(839, 552);
+            this.txtLokasi.Location = new System.Drawing.Point(839, 512);
             this.txtLokasi.Name = "txtLokasi";
             this.txtLokasi.Size = new System.Drawing.Size(265, 26);
             this.txtLokasi.TabIndex = 20;
             this.txtLokasi.TextChanged += new System.EventHandler(this.txtLokasi_TextChanged);
+            // 
+            // cmbKategori
+            // 
+            this.cmbKategori.FormattingEnabled = true;
+            this.cmbKategori.Items.AddRange(new object[] {
+            "Fiksi",
+            "Non Fiksi"});
+            this.cmbKategori.Location = new System.Drawing.Point(839, 368);
+            this.cmbKategori.Name = "cmbKategori";
+            this.cmbKategori.Size = new System.Drawing.Size(265, 28);
+            this.cmbKategori.TabIndex = 21;
+            this.cmbKategori.SelectedIndexChanged += new System.EventHandler(this.cmbKategori_SelectedIndexChanged);
             // 
             // TambahBuku
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1691, 844);
+            this.Controls.Add(this.cmbKategori);
             this.Controls.Add(this.txtLokasi);
             this.Controls.Add(this.txtStokTersedia);
-            this.Controls.Add(this.txtStokTotal);
-            this.Controls.Add(this.txtKategori);
             this.Controls.Add(this.txtTahunTerbit);
             this.Controls.Add(this.txtPenerbit);
             this.Controls.Add(this.txtPengarang);
@@ -239,7 +223,6 @@
             this.Controls.Add(this.txtKodeBuku);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -266,7 +249,6 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtKodeBuku;
@@ -274,9 +256,8 @@
         private System.Windows.Forms.TextBox txtPengarang;
         private System.Windows.Forms.TextBox txtPenerbit;
         private System.Windows.Forms.TextBox txtTahunTerbit;
-        private System.Windows.Forms.TextBox txtKategori;
-        private System.Windows.Forms.TextBox txtStokTotal;
         private System.Windows.Forms.TextBox txtStokTersedia;
         private System.Windows.Forms.TextBox txtLokasi;
+        private System.Windows.Forms.ComboBox cmbKategori;
     }
 }

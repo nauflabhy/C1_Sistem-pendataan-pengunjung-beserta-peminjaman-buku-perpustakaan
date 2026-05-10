@@ -39,6 +39,7 @@
             this.lblTotalKunjungan = new System.Windows.Forms.Label();
             this.lblPeriode = new System.Windows.Forms.Label();
             this.btnKembali = new System.Windows.Forms.Button();
+            this.btnSimpanLaporan = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -133,7 +134,7 @@
             // 
             // btnKembali
             // 
-            this.btnKembali.Location = new System.Drawing.Point(879, 516);
+            this.btnKembali.Location = new System.Drawing.Point(742, 512);
             this.btnKembali.Name = "btnKembali";
             this.btnKembali.Size = new System.Drawing.Size(198, 88);
             this.btnKembali.TabIndex = 10;
@@ -141,11 +142,22 @@
             this.btnKembali.UseVisualStyleBackColor = true;
             this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click);
             // 
+            // btnSimpanLaporan
+            // 
+            this.btnSimpanLaporan.Location = new System.Drawing.Point(1032, 512);
+            this.btnSimpanLaporan.Name = "btnSimpanLaporan";
+            this.btnSimpanLaporan.Size = new System.Drawing.Size(198, 88);
+            this.btnSimpanLaporan.TabIndex = 11;
+            this.btnSimpanLaporan.Text = "Simpan Laporan";
+            this.btnSimpanLaporan.UseVisualStyleBackColor = true;
+            this.btnSimpanLaporan.Click += new System.EventHandler(this.btnSimpanLaporan_Click);
+            // 
             // TotalLaporan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1799, 841);
+            this.Controls.Add(this.btnSimpanLaporan);
             this.Controls.Add(this.btnKembali);
             this.Controls.Add(this.lblDenda);
             this.Controls.Add(this.lblPengembalian);
@@ -178,5 +190,6 @@
         private System.Windows.Forms.Label lblTotalKunjungan;
         private System.Windows.Forms.Label lblPeriode;
         private System.Windows.Forms.Button btnKembali;
+        private System.Windows.Forms.Button btnSimpanLaporan;
     }
 }

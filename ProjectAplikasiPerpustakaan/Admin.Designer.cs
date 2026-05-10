@@ -33,7 +33,6 @@
             this.btnLogout = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnDaftarPengajuan = new System.Windows.Forms.Button();
-            this.btnPengguna = new System.Windows.Forms.Button();
             this.btnEditBuku = new System.Windows.Forms.Button();
             this.btnLoadDatabase = new System.Windows.Forms.Button();
             this.btnLaporan = new System.Windows.Forms.Button();
@@ -88,19 +87,9 @@
             this.btnDaftarPengajuan.UseVisualStyleBackColor = true;
             this.btnDaftarPengajuan.Click += new System.EventHandler(this.btnDaftarPengajuan_Click);
             // 
-            // btnPengguna
-            // 
-            this.btnPengguna.Location = new System.Drawing.Point(487, 730);
-            this.btnPengguna.Name = "btnPengguna";
-            this.btnPengguna.Size = new System.Drawing.Size(183, 65);
-            this.btnPengguna.TabIndex = 4;
-            this.btnPengguna.Text = "Daftar Pengguna";
-            this.btnPengguna.UseVisualStyleBackColor = true;
-            this.btnPengguna.Click += new System.EventHandler(this.btnPengguna_Click);
-            // 
             // btnEditBuku
             // 
-            this.btnEditBuku.Location = new System.Drawing.Point(722, 730);
+            this.btnEditBuku.Location = new System.Drawing.Point(467, 730);
             this.btnEditBuku.Name = "btnEditBuku";
             this.btnEditBuku.Size = new System.Drawing.Size(183, 65);
             this.btnEditBuku.TabIndex = 5;
@@ -120,7 +109,7 @@
             // 
             // btnLaporan
             // 
-            this.btnLaporan.Location = new System.Drawing.Point(945, 730);
+            this.btnLaporan.Location = new System.Drawing.Point(1073, 730);
             this.btnLaporan.Name = "btnLaporan";
             this.btnLaporan.Size = new System.Drawing.Size(161, 65);
             this.btnLaporan.TabIndex = 8;
@@ -130,7 +119,7 @@
             // 
             // btnTambahBuku
             // 
-            this.btnTambahBuku.Location = new System.Drawing.Point(1151, 730);
+            this.btnTambahBuku.Location = new System.Drawing.Point(686, 730);
             this.btnTambahBuku.Name = "btnTambahBuku";
             this.btnTambahBuku.Size = new System.Drawing.Size(147, 65);
             this.btnTambahBuku.TabIndex = 9;
@@ -140,7 +129,7 @@
             // 
             // btnHapusBuku
             // 
-            this.btnHapusBuku.Location = new System.Drawing.Point(1346, 730);
+            this.btnHapusBuku.Location = new System.Drawing.Point(881, 730);
             this.btnHapusBuku.Name = "btnHapusBuku";
             this.btnHapusBuku.Size = new System.Drawing.Size(147, 65);
             this.btnHapusBuku.TabIndex = 10;
@@ -188,7 +177,6 @@
             this.Controls.Add(this.btnLaporan);
             this.Controls.Add(this.btnLoadDatabase);
             this.Controls.Add(this.btnEditBuku);
-            this.Controls.Add(this.btnPengguna);
             this.Controls.Add(this.btnDaftarPengajuan);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnLogout);
@@ -209,7 +197,6 @@
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnDaftarPengajuan;
-        private System.Windows.Forms.Button btnPengguna;
         private System.Windows.Forms.Button btnEditBuku;
         private System.Windows.Forms.Button btnLoadDatabase;
         private System.Windows.Forms.Button btnLaporan;

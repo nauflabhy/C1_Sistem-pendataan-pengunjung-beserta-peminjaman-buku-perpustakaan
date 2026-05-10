@@ -31,12 +31,11 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnDetailBuku = new System.Windows.Forms.Button();
             this.btnPinjam = new System.Windows.Forms.Button();
-            this.btnKembalikan = new System.Windows.Forms.Button();
             this.txtCariBuku = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCari = new System.Windows.Forms.Button();
             this.btnBukuDipinjam = new System.Windows.Forms.Button();
-            this.btnLogout = new System.Windows.Forms.Button();
+            this.btnLogin = new System.Windows.Forms.Button();
             this.btnLoadDatabase = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
@@ -72,16 +71,6 @@
             this.btnPinjam.UseVisualStyleBackColor = true;
             this.btnPinjam.Click += new System.EventHandler(this.btnPinjam_Click);
             // 
-            // btnKembalikan
-            // 
-            this.btnKembalikan.Location = new System.Drawing.Point(439, 723);
-            this.btnKembalikan.Name = "btnKembalikan";
-            this.btnKembalikan.Size = new System.Drawing.Size(149, 59);
-            this.btnKembalikan.TabIndex = 4;
-            this.btnKembalikan.Text = "Kembalikan Buku";
-            this.btnKembalikan.UseVisualStyleBackColor = true;
-            this.btnKembalikan.Click += new System.EventHandler(this.btnKembalikan_Click);
-            // 
             // txtCariBuku
             // 
             this.txtCariBuku.Location = new System.Drawing.Point(535, 55);
@@ -111,7 +100,7 @@
             // 
             // btnBukuDipinjam
             // 
-            this.btnBukuDipinjam.Location = new System.Drawing.Point(617, 723);
+            this.btnBukuDipinjam.Location = new System.Drawing.Point(439, 724);
             this.btnBukuDipinjam.Name = "btnBukuDipinjam";
             this.btnBukuDipinjam.Size = new System.Drawing.Size(149, 59);
             this.btnBukuDipinjam.TabIndex = 8;
@@ -119,19 +108,19 @@
             this.btnBukuDipinjam.UseVisualStyleBackColor = true;
             this.btnBukuDipinjam.Click += new System.EventHandler(this.btnBukuDipinjam_Click);
             // 
-            // btnLogout
+            // btnLogin
             // 
-            this.btnLogout.Location = new System.Drawing.Point(90, 41);
-            this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(121, 46);
-            this.btnLogout.TabIndex = 9;
-            this.btnLogout.Text = "Log Out";
-            this.btnLogout.UseVisualStyleBackColor = true;
-            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            this.btnLogin.Location = new System.Drawing.Point(90, 41);
+            this.btnLogin.Name = "btnLogin";
+            this.btnLogin.Size = new System.Drawing.Size(121, 46);
+            this.btnLogin.TabIndex = 9;
+            this.btnLogin.Text = "Log In";
+            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // btnLoadDatabase
             // 
-            this.btnLoadDatabase.Location = new System.Drawing.Point(793, 724);
+            this.btnLoadDatabase.Location = new System.Drawing.Point(615, 725);
             this.btnLoadDatabase.Name = "btnLoadDatabase";
             this.btnLoadDatabase.Size = new System.Drawing.Size(158, 59);
             this.btnLoadDatabase.TabIndex = 10;
@@ -145,12 +134,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1788, 832);
             this.Controls.Add(this.btnLoadDatabase);
-            this.Controls.Add(this.btnLogout);
+            this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.btnBukuDipinjam);
             this.Controls.Add(this.btnCari);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtCariBuku);
-            this.Controls.Add(this.btnKembalikan);
             this.Controls.Add(this.btnPinjam);
             this.Controls.Add(this.btnDetailBuku);
             this.Controls.Add(this.dataGridView1);
@@ -168,12 +156,11 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnDetailBuku;
         private System.Windows.Forms.Button btnPinjam;
-        private System.Windows.Forms.Button btnKembalikan;
         private System.Windows.Forms.TextBox txtCariBuku;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnCari;
         private System.Windows.Forms.Button btnBukuDipinjam;
-        private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnLoadDatabase;
     }
 }

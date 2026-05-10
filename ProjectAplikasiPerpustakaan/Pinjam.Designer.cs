@@ -42,7 +42,7 @@
             this.btnAjukanPeminjaman = new System.Windows.Forms.Button();
             this.btnKembali = new System.Windows.Forms.Button();
             this.lblKodeBuku = new System.Windows.Forms.Label();
-            this.lblJudul = new System.Windows.Forms.Label();
+            this.lblJudulBuku = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -97,7 +97,6 @@
             this.txtNIK.Name = "txtNIK";
             this.txtNIK.Size = new System.Drawing.Size(231, 26);
             this.txtNIK.TabIndex = 10;
-            this.txtNIK.TextChanged += new System.EventHandler(this.txtNIK_TextChanged);
             // 
             // txtNamaLengkap
             // 
@@ -105,7 +104,6 @@
             this.txtNamaLengkap.Name = "txtNamaLengkap";
             this.txtNamaLengkap.Size = new System.Drawing.Size(231, 26);
             this.txtNamaLengkap.TabIndex = 11;
-            this.txtNamaLengkap.TextChanged += new System.EventHandler(this.txtNamaLengkap_TextChanged);
             // 
             // txtNoHp
             // 
@@ -113,7 +111,6 @@
             this.txtNoHp.Name = "txtNoHp";
             this.txtNoHp.Size = new System.Drawing.Size(231, 26);
             this.txtNoHp.TabIndex = 12;
-            this.txtNoHp.TextChanged += new System.EventHandler(this.txtNoHp_TextChanged);
             // 
             // txtEmail
             // 
@@ -121,7 +118,6 @@
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(231, 26);
             this.txtEmail.TabIndex = 13;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // txtPerguruan
             // 
@@ -129,7 +125,6 @@
             this.txtPerguruan.Name = "txtPerguruan";
             this.txtPerguruan.Size = new System.Drawing.Size(231, 26);
             this.txtPerguruan.TabIndex = 17;
-            this.txtPerguruan.TextChanged += new System.EventHandler(this.txtPeguruan_TextChanged);
             // 
             // label7
             // 
@@ -169,21 +164,21 @@
             this.lblKodeBuku.TabIndex = 20;
             this.lblKodeBuku.Text = "KodeBuku";
             // 
-            // lblJudul
+            // lblJudulBuku
             // 
-            this.lblJudul.AutoSize = true;
-            this.lblJudul.Location = new System.Drawing.Point(1041, 172);
-            this.lblJudul.Name = "lblJudul";
-            this.lblJudul.Size = new System.Drawing.Size(84, 20);
-            this.lblJudul.TabIndex = 21;
-            this.lblJudul.Text = "JudulBuku";
+            this.lblJudulBuku.AutoSize = true;
+            this.lblJudulBuku.Location = new System.Drawing.Point(1041, 172);
+            this.lblJudulBuku.Name = "lblJudulBuku";
+            this.lblJudulBuku.Size = new System.Drawing.Size(84, 20);
+            this.lblJudulBuku.TabIndex = 21;
+            this.lblJudulBuku.Text = "JudulBuku";
             // 
             // Pinjam
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1813, 726);
-            this.Controls.Add(this.lblJudul);
+            this.Controls.Add(this.lblJudulBuku);
             this.Controls.Add(this.lblKodeBuku);
             this.Controls.Add(this.btnKembali);
             this.Controls.Add(this.btnAjukanPeminjaman);
@@ -222,6 +217,6 @@
         private System.Windows.Forms.Button btnAjukanPeminjaman;
         private System.Windows.Forms.Button btnKembali;
         private System.Windows.Forms.Label lblKodeBuku;
-        private System.Windows.Forms.Label lblJudul;
+        private System.Windows.Forms.Label lblJudulBuku;
     }
 }

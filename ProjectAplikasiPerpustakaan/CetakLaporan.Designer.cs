@@ -98,6 +98,7 @@
             this.Controls.Add(this.label1);
             this.Name = "CetakLaporan";
             this.Text = "CetakLaporan";
+            this.Load += new System.EventHandler(this.CetakLaporan_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvLaporan)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

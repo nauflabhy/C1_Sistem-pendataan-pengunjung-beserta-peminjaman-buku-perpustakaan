@@ -11,12 +11,15 @@ namespace ProjectAplikasiPerpustakaan
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtPengajuan;
+        private readonly int idUser;
         private readonly string namaAdmin;
         private readonly string roleAdmin;
 
-        public btnKembali(string namaAdmin, string roleAdmin)
+        public btnKembali(int idUser, string namaAdmin, string roleAdmin)
         {
             InitializeComponent();
+
+            this.idUser = idUser;
             this.namaAdmin = namaAdmin;
             this.roleAdmin = roleAdmin;
         }
@@ -73,8 +76,17 @@ namespace ProjectAplikasiPerpustakaan
                 using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                 {
                     dtPengajuan = new DataTable();
+
                     da.Fill(dtPengajuan);
+
+                    // reset datasource dulu
+                    dataGridView1.DataSource = null;
+
+                    // isi ulang
                     dataGridView1.DataSource = dtPengajuan;
+
+                    // refresh tampilan
+                    dataGridView1.Refresh();
 
                     // Sembunyikan kolom ID
                     if (dataGridView1.Columns["id_peminjaman"] != null)
@@ -94,6 +106,7 @@ namespace ProjectAplikasiPerpustakaan
                     dataGridView1.Columns["Alasan_Tolak"].DisplayIndex = 10;
 
                     WarnaiBarisBerdasarkanStatus();
+                    dataGridView1.ClearSelection();
                 }
 
                 this.Text = $"Daftar Pengajuan Peminjaman - Total: {dtPengajuan.Rows.Count} pengajuan";
@@ -147,7 +160,7 @@ namespace ProjectAplikasiPerpustakaan
             }
 
             int idPeminjaman = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_peminjaman"].Value);
-            string judulBuku = dataGridView1.SelectedRows[0].Cells["Judul_Buku"].Value.ToString();
+            string judulBuku = dataGridView1.SelectedRows[0].Cells["Judul_Buku"].Value?.ToString() ?? "";
 
             DialogResult konfirm = MessageBox.Show(
                 $"Setujui peminjaman buku:\n\n{judulBuku}\n\n" +
@@ -158,21 +171,17 @@ namespace ProjectAplikasiPerpustakaan
             if (konfirm != DialogResult.Yes) return;
 
             string query = @"
-                UPDATE PEMINJAMAN
-                SET status = 'dipinjam',
-                    id_admin = (SELECT id_admin FROM ADMIN WHERE id_user = 
-                                (SELECT id_user FROM Pengguna WHERE username = @namaAdmin)),
-                    tanggal_disetujui = GETDATE(),
-                    tanggal_pinjam = GETDATE(),
-                    tanggal_jatuh_tempo = DATEADD(DAY, 7, GETDATE())
-                WHERE id_peminjaman = @id_peminjaman;
+        UPDATE PEMINJAMAN
+        SET status = 'dipinjam',
+            id_user = @id_user,                    -- Diubah dari id_admin
+            tanggal_disetujui = GETDATE(),
+            tanggal_pinjam = GETDATE(),
+            tanggal_jatuh_tempo = DATEADD(DAY, 7, GETDATE())
+        WHERE id_peminjaman = @id_peminjaman;
 
-                UPDATE BUKU
-                SET stok_tersedia = stok_tersedia - 1
-                WHERE id_buku = (SELECT id_buku FROM PEMINJAMAN WHERE id_peminjaman = @id_peminjaman);";
-
-            // Catatan: Anda perlu mengirimkan nama admin dari form Admin
-            // Untuk sementara saya pakai contoh. Lebih baik pass parameter namaAdmin ke constructor.
+        UPDATE BUKU
+        SET stok_tersedia = stok_tersedia - 1
+        WHERE id_buku = (SELECT id_buku FROM PEMINJAMAN WHERE id_peminjaman = @id_peminjaman);";
 
             try
             {
@@ -180,16 +189,16 @@ namespace ProjectAplikasiPerpustakaan
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@id_peminjaman", idPeminjaman);
-                    cmd.Parameters.AddWithValue("@namaAdmin", "Admin"); // ← ganti dengan nama admin yang login
+                    cmd.Parameters.AddWithValue("@id_user", this.idUser); // atau kirim id_user asli
 
                     conn.Open();
                     int rows = cmd.ExecuteNonQuery();
 
                     if (rows > 0)
                     {
-                        MessageBox.Show("Peminjaman berhasil disetujui!",
+                        MessageBox.Show("✅ Peminjaman berhasil disetujui!\nStok buku telah dikurangi.",
                             "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadDataPengajuan(); // refresh
+                        LoadDataPengajuan();
                     }
                 }
             }
@@ -288,11 +297,11 @@ namespace ProjectAplikasiPerpustakaan
         private void ProsesTolakPengajuan(int idPeminjaman, string alasan)
         {
             string query = @"
-        UPDATE PEMINJAMAN
-        SET status = 'ditolak',
-            id_admin = (SELECT TOP 1 id_admin FROM ADMIN),
-            alasan_tolak = @alasan
-        WHERE id_peminjaman = @id_peminjaman";
+            UPDATE PEMINJAMAN
+            SET status = 'ditolak',
+                alasan_tolak = @alasan,
+                id_user = @id_user
+            WHERE id_peminjaman = @id_peminjaman";
 
             try
             {
@@ -301,6 +310,7 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     cmd.Parameters.AddWithValue("@id_peminjaman", idPeminjaman);
                     cmd.Parameters.AddWithValue("@alasan", alasan);
+                    cmd.Parameters.AddWithValue("@id_user", this.idUser);
 
                     conn.Open();
                     int rows = cmd.ExecuteNonQuery();
@@ -338,7 +348,57 @@ namespace ProjectAplikasiPerpustakaan
             this.Close();
 
             // Buka kembali Form Admin dan kirim data admin yang sedang login
-            Admin formAdmin = new Admin(namaAdmin, roleAdmin);
+            btnKembali form = new btnKembali(idUser, namaAdmin, roleAdmin);
+        }
+
+        private void btnSelesai_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Pilih data terlebih dahulu.");
+                return;
+            }
+
+            DataGridViewRow row = dataGridView1.SelectedRows[0];
+
+            string status =
+                row.Cells["Status"].Value.ToString().ToLower();
+
+            if (status != "dipinjam")
+            {
+                MessageBox.Show(
+                    "Hanya buku dengan status DIPINJAM yang bisa dikembalikan.",
+                    "Peringatan",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return;
+            }
+
+            int idPeminjaman =
+                Convert.ToInt32(row.Cells["id_peminjaman"].Value);
+
+            string kodeBuku =
+                row.Cells["Kode_Buku"].Value.ToString();
+
+            string judulBuku =
+                row.Cells["Judul_Buku"].Value.ToString();
+
+            DateTime tanggalAjuan =
+                Convert.ToDateTime(row.Cells["Tanggal_Ajuan"].Value);
+
+            FormPengembalian form = new FormPengembalian(
+                idPeminjaman,
+                kodeBuku,
+                judulBuku,
+                tanggalAjuan,
+                idUser
+            );
+
+            form.ShowDialog();
+
+            LoadDataPengajuan();
+
         }
     }
 }

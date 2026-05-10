@@ -10,16 +10,12 @@ namespace ProjectAplikasiPerpustakaan
         private readonly string connectionString =
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
-        private readonly string namaPengguna;
-        private readonly string rolePengguna;
         private DataTable dtBuku;
 
         // Constructor untuk user yang sudah login
-        public CariBuku(string nama, string role)
+        public CariBuku()
         {
             InitializeComponent();
-            this.namaPengguna = nama;
-            this.rolePengguna = role;
         }
 
 
@@ -41,7 +37,6 @@ namespace ProjectAplikasiPerpustakaan
                             penerbit,
                             tahun_terbit,
                             kategori,
-                            stok_total,
                             stok_tersedia,
                             lokasi
                         FROM BUKU
@@ -118,50 +113,43 @@ namespace ProjectAplikasiPerpustakaan
         // ================== TOMBOL PINJAM ==================
         private void btnPinjam_Click(object sender, EventArgs e)
         {
+
             if (dataGridView1.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Silakan pilih buku yang ingin dipinjam terlebih dahulu.",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Silakan pilih buku yang akan dipinjam terlebih dahulu.",
+                                "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
-            int idBuku = Convert.ToInt32(selectedRow.Cells["id_buku"].Value);
-            string kodeBuku = selectedRow.Cells["kode_buku"].Value.ToString();
-            string judulBuku = selectedRow.Cells["judul"].Value.ToString();
-            int stokTersedia = Convert.ToInt32(selectedRow.Cells["stok_tersedia"].Value);
-
-            if (stokTersedia <= 0)
+            try
             {
-                MessageBox.Show($"Buku \"{judulBuku}\" sedang tidak tersedia (stok habis).",
-                    "Stok Habis", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                DataGridViewRow selectedRow = dataGridView1.SelectedRows[0];
+
+                int idBuku = Convert.ToInt32(selectedRow.Cells["id_buku"].Value);
+                string kodeBuku = selectedRow.Cells["kode_buku"].Value?.ToString() ?? "";
+                string judulBuku = selectedRow.Cells["judul"].Value?.ToString() ?? "";
+                int stokTersedia = Convert.ToInt32(selectedRow.Cells["stok_tersedia"].Value);
+
+                MessageBox.Show($"Debug Info:\nID: {idBuku}\nKode: {kodeBuku}\nJudul: {judulBuku}\nStok: {stokTersedia}",
+                                "Data Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                if (stokTersedia <= 0)
+                {
+                    MessageBox.Show("Maaf, buku ini sedang tidak tersedia.", "Stok Habis",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                Pinjam formPinjam = new Pinjam(idBuku, kodeBuku, judulBuku);
+                formPinjam.ShowDialog();
+
+                LoadDataBuku();
             }
-
-            DialogResult konfirmasi = MessageBox.Show(
-                $"Anda akan meminjam buku:\n\nJudul : {judulBuku}\nKode : {kodeBuku}\n\nLanjutkan?",
-                "Konfirmasi Peminjaman", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (konfirmasi == DialogResult.Yes)
+            catch (Exception ex)
             {
-                Pinjam formPinjam = new Pinjam(idBuku, kodeBuku, judulBuku, namaPengguna, rolePengguna);
-                formPinjam.Show();
-                this.Hide();
+                MessageBox.Show("ERROR:\n" + ex.Message, "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        // ================== TOMBOL KEMBALIKAN ==================
-        private void btnKembalikan_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(namaPengguna))
-            {
-                MessageBox.Show("Data pengguna tidak ditemukan.\nSilakan login kembali.",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            KembalikanBuku formKembali = new KembalikanBuku(namaPengguna);
-            formKembali.Show();
         }
 
         // ================== TOMBOL DETAIL BUKU ==================
@@ -180,7 +168,7 @@ namespace ProjectAplikasiPerpustakaan
                 int idBuku = Convert.ToInt32(selectedRow.Cells["id_buku"].Value);
                 string judulBuku = selectedRow.Cells["judul"].Value?.ToString() ?? "";
 
-                DetailBuku formDetail = new DetailBuku(idBuku, judulBuku, namaPengguna);
+                DetailBuku formDetail = new DetailBuku(idBuku, judulBuku);
                 formDetail.ShowDialog();
             }
             catch (Exception ex)
@@ -193,33 +181,45 @@ namespace ProjectAplikasiPerpustakaan
         // ================== TOMBOL RIWAYAT BUKU DIPINJAM ==================
         private void btnBukuDipinjam_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(namaPengguna))
+            try
             {
-                MessageBox.Show("Data pengguna tidak ditemukan. Silakan login kembali.",
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                // Membuka form BukuDipinjamPengunjung
+                BukuDipinjamPengunjung formRiwayat = new BukuDipinjamPengunjung();
+                formRiwayat.ShowDialog();   // Gunakan ShowDialog agar user harus selesai dulu
+
+                // Optional: Refresh data buku setelah melihat riwayat
+                // LoadDataBuku();
             }
-
-            BukuDipinjamPengunjung formRiwayat = new BukuDipinjamPengunjung(namaPengguna, rolePengguna);
-            formRiwayat.Show();
-        }
-
-        // ================== LOGOUT ==================
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            DialogResult konfirmasi = MessageBox.Show("Apakah Anda yakin ingin keluar?",
-                "Konfirmasi Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (konfirmasi == DialogResult.Yes)
+            catch (Exception ex)
             {
-                LoginMenu formLogin = new LoginMenu();
-                formLogin.Show();
-                this.Close();
+                MessageBox.Show("Gagal membuka form Riwayat Buku Dipinjam:\n" + ex.Message,
+                                "Error",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
         }
 
         // Event kosong (bisa dihapus jika tidak dipakai)
-        private void btnConnect_Click(object sender, EventArgs e) { }
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
+
+        private void btnLogin_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Membuat instance form LoginMenu
+                LoginMenu formLogin = new LoginMenu();
+
+                // Menampilkan form Login
+                formLogin.Show();
+
+                // Menyembunyikan form CariBuku saat ini
+                this.Hide();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal membuka halaman login:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

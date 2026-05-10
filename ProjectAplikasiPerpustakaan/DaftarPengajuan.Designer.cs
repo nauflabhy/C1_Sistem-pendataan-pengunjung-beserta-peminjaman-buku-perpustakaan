@@ -33,6 +33,7 @@
             this.btnTolak = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
+            this.btnSelesai = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,7 +70,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(681, 684);
+            this.btnRefresh.Location = new System.Drawing.Point(928, 684);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(228, 85);
             this.btnRefresh.TabIndex = 3;
@@ -87,11 +88,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // btnSelesai
+            // 
+            this.btnSelesai.Location = new System.Drawing.Point(651, 684);
+            this.btnSelesai.Name = "btnSelesai";
+            this.btnSelesai.Size = new System.Drawing.Size(228, 85);
+            this.btnSelesai.TabIndex = 5;
+            this.btnSelesai.Text = "Selesai";
+            this.btnSelesai.UseVisualStyleBackColor = true;
+            this.btnSelesai.Click += new System.EventHandler(this.btnSelesai_Click);
+            // 
             // btnKembali
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1801, 842);
+            this.Controls.Add(this.btnSelesai);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnTolak);
@@ -112,5 +124,6 @@
         private System.Windows.Forms.Button btnTolak;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnSelesai;
     }
 }

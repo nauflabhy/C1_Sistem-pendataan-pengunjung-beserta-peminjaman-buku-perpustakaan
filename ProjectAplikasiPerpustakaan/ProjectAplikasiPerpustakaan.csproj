@@ -71,12 +71,6 @@
     <Compile Include="DaftarPengajuan.Designer.cs">
       <DependentUpon>DaftarPengajuan.cs</DependentUpon>
     </Compile>
-    <Compile Include="DaftarPengguna.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DaftarPengguna.Designer.cs">
-      <DependentUpon>DaftarPengguna.cs</DependentUpon>
-    </Compile>
     <Compile Include="DaftarPengunjung.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,18 +107,6 @@
     <Compile Include="EditPengguna.Designer.cs">
       <DependentUpon>EditPengguna.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormPengembalian.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormPengembalian.Designer.cs">
-      <DependentUpon>FormPengembalian.cs</DependentUpon>
-    </Compile>
-    <Compile Include="KembalikanBuku.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="KembalikanBuku.Designer.cs">
-      <DependentUpon>KembalikanBuku.cs</DependentUpon>
-    </Compile>
     <Compile Include="TotalLaporan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +139,12 @@
     <Compile Include="TambahBuku.Designer.cs">
       <DependentUpon>TambahBuku.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormPengembalian.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormPengembalian.Designer.cs">
+      <DependentUpon>FormPengembalian.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Admin.resx">
       <DependentUpon>Admin.cs</DependentUpon>
     </EmbeddedResource>
@@ -168,9 +156,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DaftarPengajuan.resx">
       <DependentUpon>DaftarPengajuan.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DaftarPengguna.resx">
-      <DependentUpon>DaftarPengguna.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DaftarPengunjung.resx">
       <DependentUpon>DaftarPengunjung.cs</DependentUpon>
@@ -189,12 +174,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EditPengguna.resx">
       <DependentUpon>EditPengguna.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormPengembalian.resx">
-      <DependentUpon>FormPengembalian.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="KembalikanBuku.resx">
-      <DependentUpon>KembalikanBuku.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TotalLaporan.resx">
       <DependentUpon>TotalLaporan.cs</DependentUpon>
@@ -219,6 +198,9 @@
     </Compile>
     <EmbeddedResource Include="TambahBuku.resx">
       <DependentUpon>TambahBuku.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormPengembalian.resx">
+      <DependentUpon>FormPengembalian.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

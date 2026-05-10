@@ -85,7 +85,7 @@ namespace ProjectAplikasiPerpustakaan
             this.Close();
 
             // Buka form CariBuku lagi
-            CariBuku formCariBuku = new CariBuku(namaPengguna, rolePengguna);
+            CariBuku formCariBuku = new CariBuku();
             formCariBuku.Show();
         }
 

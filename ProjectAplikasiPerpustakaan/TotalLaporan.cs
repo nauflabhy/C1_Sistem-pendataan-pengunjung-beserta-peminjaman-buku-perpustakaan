@@ -89,5 +89,91 @@ namespace ProjectAplikasiPerpustakaan
         {
             this.Close();
         }
+
+        private void btnSimpanLaporan_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Ambil data laporan
+                    string querySelect = @"
+                SELECT
+                    FORMAT(GETDATE(), 'yyyy-MM') AS periode,
+                    (SELECT COUNT(*) FROM PEMINJAMAN WHERE status = 'selesai') AS total_kunjungan,
+                    (SELECT COUNT(*) FROM PEMINJAMAN) AS total_peminjaman,
+                    (SELECT COUNT(*) FROM PENGEMBALIAN) AS total_pengembalian,
+                    (SELECT ISNULL(SUM(denda), 0) FROM PENGEMBALIAN) AS total_denda;";
+
+                    string periode = "";
+                    int totalKunjungan = 0, totalPeminjaman = 0, totalPengembalian = 0;
+                    decimal totalDenda = 0;
+
+                    using (SqlCommand cmdSelect = new SqlCommand(querySelect, conn))
+                    using (SqlDataReader reader = cmdSelect.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            periode = reader["periode"].ToString();
+                            totalKunjungan = Convert.ToInt32(reader["total_kunjungan"]);
+                            totalPeminjaman = Convert.ToInt32(reader["total_peminjaman"]);
+                            totalPengembalian = Convert.ToInt32(reader["total_pengembalian"]);
+                            totalDenda = Convert.ToDecimal(reader["total_denda"]);
+                        }
+                    }
+
+                    // Cek duplikat periode
+                    string checkQuery = "SELECT COUNT(*) FROM LAPORAN WHERE periode = @periode";
+                    using (SqlCommand cmdCheck = new SqlCommand(checkQuery, conn))
+                    {
+                        cmdCheck.Parameters.AddWithValue("@periode", periode);
+                        int existing = Convert.ToInt32(cmdCheck.ExecuteScalar());
+
+                        if (existing > 0)
+                        {
+                            var dr = MessageBox.Show($"Laporan untuk periode {periode} sudah ada.\n\nGanti dengan data baru?",
+                                "Konfirmasi", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (dr == DialogResult.No) return;
+                        }
+                    }
+
+                    // INSERT dengan id_user
+                    string insertQuery = @"
+                INSERT INTO LAPORAN 
+                    (id_user, periode, total_kunjungan, total_peminjaman, 
+                     total_pengembalian, total_denda)
+                VALUES 
+                    (@id_user, @periode, @total_kunjungan, @total_peminjaman, 
+                     @total_pengembalian, @total_denda)";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(insertQuery, conn))
+                    {
+                        // 🔥 GANTI DENGAN ID_USER YANG SEDANG LOGIN
+                        cmdInsert.Parameters.AddWithValue("@id_user", 1);   // ← Ubah ini!
+
+                        cmdInsert.Parameters.AddWithValue("@periode", periode);
+                        cmdInsert.Parameters.AddWithValue("@total_kunjungan", totalKunjungan);
+                        cmdInsert.Parameters.AddWithValue("@total_peminjaman", totalPeminjaman);
+                        cmdInsert.Parameters.AddWithValue("@total_pengembalian", totalPengembalian);
+                        cmdInsert.Parameters.AddWithValue("@total_denda", totalDenda);
+
+                        int result = cmdInsert.ExecuteNonQuery();
+
+                        if (result > 0)
+                        {
+                            MessageBox.Show($"Laporan periode {periode} berhasil disimpan!",
+                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal menyimpan laporan:\n" + ex.Message,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

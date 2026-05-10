@@ -38,6 +38,7 @@
             this.btnLogin = new System.Windows.Forms.Button();
             this.fileSystemWatcher1 = new System.IO.FileSystemWatcher();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.btnKembali = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,11 +46,11 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Roboto Mono", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(873, 238);
+            this.label1.Location = new System.Drawing.Point(982, 236);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(280, 32);
+            this.label1.Size = new System.Drawing.Size(84, 32);
             this.label1.TabIndex = 0;
-            this.label1.Text = "LOGIN SEBAGAI ADMIN";
+            this.label1.Text = "LOGIN";
             // 
             // label2
             // 
@@ -99,7 +100,7 @@
             // 
             this.btnLogin.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnLogin.Cursor = System.Windows.Forms.Cursors.AppStarting;
-            this.btnLogin.Location = new System.Drawing.Point(979, 487);
+            this.btnLogin.Location = new System.Drawing.Point(1057, 487);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(109, 51);
             this.btnLogin.TabIndex = 6;
@@ -118,12 +119,25 @@
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
+            // btnKembali
+            // 
+            this.btnKembali.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnKembali.Cursor = System.Windows.Forms.Cursors.AppStarting;
+            this.btnKembali.Location = new System.Drawing.Point(818, 487);
+            this.btnKembali.Name = "btnKembali";
+            this.btnKembali.Size = new System.Drawing.Size(109, 51);
+            this.btnKembali.TabIndex = 7;
+            this.btnKembali.Text = "Kembali";
+            this.btnKembali.UseVisualStyleBackColor = false;
+            this.btnKembali.Click += new System.EventHandler(this.btnKembali_Click);
+            // 
             // LoginMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(1805, 827);
+            this.Controls.Add(this.btnKembali);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.textPassword);
             this.Controls.Add(this.txtUsername);
@@ -151,6 +165,7 @@
         private System.Windows.Forms.Button btnLogin;
         private System.IO.FileSystemWatcher fileSystemWatcher1;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.Button btnKembali;
     }
 }
 

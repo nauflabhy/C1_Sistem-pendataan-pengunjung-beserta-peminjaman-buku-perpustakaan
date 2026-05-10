@@ -16,16 +16,24 @@ namespace ProjectAplikasiPerpustakaan
 
         private void TambahBuku_Load(object sender, EventArgs e)
         {
-            // Setup pembatasan input
+            SetupComboBoxKategori();
             SetupInputRestrictions();
-
-            // Optional: Set fokus ke field pertama
             txtKodeBuku.Focus();
+        }
+
+        // ================== SETUP COMBOBOX KATEGORI ==================
+        private void SetupComboBoxKategori()
+        {
+            cmbKategori.Items.Clear();
+            cmbKategori.Items.Add("Fiksi");
+            cmbKategori.Items.Add("Non Fiksi");
+            cmbKategori.DropDownStyle = ComboBoxStyle.DropDownList; // Tidak bisa ketik manual
+            cmbKategori.SelectedIndex = 0; // Default Fiksi
         }
 
         private void SetupInputRestrictions()
         {
-            // Kode Buku → Huruf + Angka + "-" (contoh: B001, BK-2025)
+            // Kode Buku → Huruf + Angka + "-"
             txtKodeBuku.KeyPress += (s, ev) =>
             {
                 if (!char.IsLetterOrDigit(ev.KeyChar) && ev.KeyChar != '-' && ev.KeyChar != '\b')
@@ -33,27 +41,22 @@ namespace ProjectAplikasiPerpustakaan
             };
             txtKodeBuku.MaxLength = 20;
 
-            // Judul, Pengarang, Penerbit, Kategori, Lokasi → Huruf, Angka, Spasi
+            // Teks lainnya
             txtJudul.KeyPress += AllowAlphanumericWithSpace;
             txtPengarang.KeyPress += AllowAlphanumericWithSpace;
             txtPenerbit.KeyPress += AllowAlphanumericWithSpace;
-            txtKategori.KeyPress += AllowOnlyLettersWithSpace;
             txtLokasi.KeyPress += AllowAlphanumericWithSpace;
 
             txtJudul.MaxLength = 200;
             txtPengarang.MaxLength = 100;
             txtPenerbit.MaxLength = 100;
-            txtKategori.MaxLength = 50;
             txtLokasi.MaxLength = 50;
 
-            // Tahun Terbit → Hanya Angka
+            // Tahun Terbit & Stok
             txtTahunTerbit.KeyPress += AllowOnlyNumbers;
             txtTahunTerbit.MaxLength = 4;
 
-            // Stok Total & Stok Tersedia → Hanya Angka
-            txtStokTotal.KeyPress += AllowOnlyNumbers;
             txtStokTersedia.KeyPress += AllowOnlyNumbers;
-            txtStokTotal.MaxLength = 5;
             txtStokTersedia.MaxLength = 5;
         }
 
@@ -110,16 +113,6 @@ namespace ProjectAplikasiPerpustakaan
 
         }
 
-        private void txtKategori_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtStokTotal_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void txtStokTersedia_TextChanged(object sender, EventArgs e)
         {
 
@@ -145,26 +138,18 @@ namespace ProjectAplikasiPerpustakaan
             if (string.IsNullOrWhiteSpace(txtKodeBuku.Text) ||
                 string.IsNullOrWhiteSpace(txtJudul.Text) ||
                 string.IsNullOrWhiteSpace(txtPengarang.Text) ||
-                string.IsNullOrWhiteSpace(txtStokTotal.Text) ||
+                cmbKategori.SelectedIndex == -1 ||
                 string.IsNullOrWhiteSpace(txtStokTersedia.Text))
             {
-                MessageBox.Show("Kode Buku, Judul, Pengarang, Stok Total, dan Stok Tersedia wajib diisi!",
+                MessageBox.Show("Kode Buku, Judul, Pengarang, Kategori, dan Stok Tersedia wajib diisi!",
                     "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Validasi stok
-            if (!int.TryParse(txtStokTotal.Text, out int stokTotal) ||
-                !int.TryParse(txtStokTersedia.Text, out int stokTersedia))
+            if (!int.TryParse(txtStokTersedia.Text, out int stokTersedia) || stokTersedia < 0)
             {
-                MessageBox.Show("Stok harus berupa angka yang valid!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (stokTersedia > stokTotal)
-            {
-                MessageBox.Show("Stok Tersedia tidak boleh lebih besar dari Stok Total!",
-                    "Validasi Stok", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Stok Tersedia harus berupa angka positif!", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -175,26 +160,30 @@ namespace ProjectAplikasiPerpustakaan
                     conn.Open();
 
                     string query = @"
-                        INSERT INTO BUKU 
-                        (kode_buku, judul, pengarang, penerbit, tahun_terbit, kategori, 
-                         stok_total, stok_tersedia, lokasi)
-                        VALUES 
-                        (@kode_buku, @judul, @pengarang, @penerbit, @tahun_terbit, @kategori, 
-                         @stok_total, @stok_tersedia, @lokasi)";
+                INSERT INTO BUKU
+                (kode_buku, judul, pengarang, penerbit, tahun_terbit, kategori,
+                 stok_tersedia, lokasi)
+                VALUES
+                (@kode_buku, @judul, @pengarang, @penerbit, @tahun_terbit, @kategori,
+                 @stok_tersedia, @lokasi)";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@kode_buku", txtKodeBuku.Text.Trim().ToUpper());
                         cmd.Parameters.AddWithValue("@judul", txtJudul.Text.Trim());
                         cmd.Parameters.AddWithValue("@pengarang", txtPengarang.Text.Trim());
+
+                        // Parameter yang boleh NULL (HARUS di-cast ke object)
                         cmd.Parameters.AddWithValue("@penerbit",
                             string.IsNullOrWhiteSpace(txtPenerbit.Text) ? (object)DBNull.Value : txtPenerbit.Text.Trim());
+
                         cmd.Parameters.AddWithValue("@tahun_terbit",
                             string.IsNullOrWhiteSpace(txtTahunTerbit.Text) ? (object)DBNull.Value : txtTahunTerbit.Text.Trim());
-                        cmd.Parameters.AddWithValue("@kategori",
-                            string.IsNullOrWhiteSpace(txtKategori.Text) ? (object)DBNull.Value : txtKategori.Text.Trim());
-                        cmd.Parameters.AddWithValue("@stok_total", stokTotal);
+
+                        cmd.Parameters.AddWithValue("@kategori", cmbKategori.SelectedItem.ToString());
+
                         cmd.Parameters.AddWithValue("@stok_tersedia", stokTersedia);
+
                         cmd.Parameters.AddWithValue("@lokasi",
                             string.IsNullOrWhiteSpace(txtLokasi.Text) ? (object)DBNull.Value : txtLokasi.Text.Trim());
 
@@ -202,10 +191,8 @@ namespace ProjectAplikasiPerpustakaan
 
                         if (result > 0)
                         {
-                            MessageBox.Show("Buku berhasil ditambahkan ke database!",
+                            MessageBox.Show("✅ Buku berhasil ditambahkan!",
                                 "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            // Reset form setelah berhasil
                             ClearForm();
                             txtKodeBuku.Focus();
                         }
@@ -231,10 +218,12 @@ namespace ProjectAplikasiPerpustakaan
             txtPengarang.Clear();
             txtPenerbit.Clear();
             txtTahunTerbit.Clear();
-            txtKategori.Clear();
-            txtStokTotal.Clear();
             txtStokTersedia.Clear();
             txtLokasi.Clear();
+        }
+
+        private void cmbKategori_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }

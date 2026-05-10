@@ -13,14 +13,12 @@ namespace ProjectAplikasiPerpustakaan
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private readonly int idBuku;
-        private readonly string namaPengguna;
 
-        public DetailBuku(int idBuku, string judulBuku, string namaPengguna)
+        public DetailBuku(int idBuku, string judulBuku)
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
             this.idBuku = idBuku;
-            this.namaPengguna = namaPengguna;
 
             // Set judul form dengan nama buku
             this.Text = $"Detail Buku - {judulBuku}";

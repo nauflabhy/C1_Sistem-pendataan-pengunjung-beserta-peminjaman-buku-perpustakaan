@@ -9,16 +9,18 @@ namespace ProjectAplikasiPerpustakaan
     {
         private readonly string namaAdmin;
         private readonly string roleAdmin;
+        private readonly int idUser;
         private readonly string connectionString =
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtBuku;
 
-        public Admin(string nama, string role)
+        public Admin(int idUser, string nama, string role)
         {
             InitializeComponent();
             this.namaAdmin = nama;
             this.roleAdmin = role;
+            this.idUser = idUser;
         }
 
         public Admin()
@@ -56,7 +58,6 @@ namespace ProjectAplikasiPerpustakaan
                             penerbit,
                             tahun_terbit,
                             kategori,
-                            stok_total,
                             stok_tersedia,
                             lokasi
                         FROM BUKU 
@@ -108,12 +109,16 @@ namespace ProjectAplikasiPerpustakaan
 
             int idBuku = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_buku"].Value);
 
+            // Debug ID
+            MessageBox.Show($"Anda memilih Buku ID: {idBuku}", "Debug ID",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             EditBuku formEdit = new EditBuku(idBuku);
             formEdit.ShowDialog();
 
             if (formEdit.DialogResult == DialogResult.OK)
             {
-                LoadDataBuku();        // Refresh setelah edit
+                LoadDataBuku(); // refresh grid
             }
         }
 
@@ -122,7 +127,7 @@ namespace ProjectAplikasiPerpustakaan
         {
             try
             {
-                btnKembali formPengajuan = new btnKembali(namaAdmin, roleAdmin);
+                btnKembali formPengajuan = new btnKembali(idUser, namaAdmin, roleAdmin);
                 formPengajuan.ShowDialog();
 
                 // Refresh data setelah kembali dari form pengajuan
@@ -138,16 +143,7 @@ namespace ProjectAplikasiPerpustakaan
         // ================== TOMBOL DAFTAR PENGGUNA ==================
         private void btnPengguna_Click(object sender, EventArgs e)
         {
-            try
-            {
-                DaftarPengguna formDaftarPengguna = new DaftarPengguna();
-                formDaftarPengguna.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal membuka daftar pengguna:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
         }
 
         // ================== TOMBOL LAPORAN ==================

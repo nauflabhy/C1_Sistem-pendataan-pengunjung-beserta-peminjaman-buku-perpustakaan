@@ -65,8 +65,13 @@ namespace ProjectAplikasiPerpustakaan
             try
             {
                 conn.Open();
-                string query = @"SELECT username, role FROM Pengguna 
-                         WHERE username = @username AND password = @password";
+
+                // Ambil juga id_user
+                string query = @"
+            SELECT id_user, username, role
+            FROM Admin
+            WHERE username = @username
+            AND password = @password";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -77,34 +82,43 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         if (reader.Read())
                         {
+                            // =========================
+                            // Ambil data admin
+                            // =========================
+                            int idUser = Convert.ToInt32(reader["id_user"]);
                             string namaUser = reader["username"].ToString();
                             string role = reader["role"].ToString();
 
-                            MessageBox.Show($"Login berhasil!\nSelamat datang, {namaUser}",
-                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show(
+                                $"Login berhasil!\nSelamat datang, {namaUser}",
+                                "Sukses",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
 
-                            if (role == "admin")
+                            // =========================
+                            // Buka form sesuai role
+                            // =========================
+                            if (role.ToLower() == "admin")
                             {
-                                // Masuk sebagai Admin
-                                Admin formAdmin = new Admin(namaUser, role);
+                                Admin formAdmin = new Admin(idUser, namaUser, role);
                                 formAdmin.Show();
                             }
                             else
                             {
-                                // Masuk sebagai Pengunjung / User biasa
-                                CariBuku formCari = new CariBuku(namaUser, role);
+                                CariBuku formCari = new CariBuku();
                                 formCari.Show();
                             }
 
                             this.Hide();
-
-                            this.Hide();        // Sembunyikan form login
-                                                // this.Close();    // JANGAN pakai Close() di sini, nanti aplikasi mati
                         }
                         else
                         {
-                            MessageBox.Show("Username atau Password salah!",
-                                "Login Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show(
+                                "Username atau Password salah!",
+                                "Login Gagal",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
+
                             textPassword.Clear();
                             textPassword.Focus();
                         }
@@ -113,13 +127,42 @@ namespace ProjectAplikasiPerpustakaan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Terjadi kesalahan:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             finally
             {
                 if (conn.State == ConnectionState.Open)
                     conn.Close();
+            }
+        }
+
+        private void btnRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
+
+        private void btnKembali_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                CariBuku formCari = new CariBuku();
+                formCari.Show();
+
+                // Sembunyikan form Login (opsional)
+                this.Hide();
+
+                // Atau tutup form login (pilih salah satu)
+                // this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal membuka halaman pencarian buku:\n" + ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

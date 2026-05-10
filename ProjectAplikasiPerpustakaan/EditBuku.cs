@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Drawing.Text;
 using System.Windows.Forms;
 
 namespace ProjectAplikasiPerpustakaan
@@ -11,18 +12,33 @@ namespace ProjectAplikasiPerpustakaan
 
         private readonly int idBuku;
 
-        // Constructor yang menerima id_buku
         public EditBuku(int idBuku)
         {
             InitializeComponent();
             this.idBuku = idBuku;
+
+            // DEBUG 1: Cek ID yang diterima
+            MessageBox.Show($"Form EditBuku dibuka dengan ID Buku = {idBuku}",
+                "DEBUG Constructor", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        // ================== LOAD DATA SAAT FORM DIBUKA ==================
         private void EditBuku_Load(object sender, EventArgs e)
         {
+            // DEBUG 2
+            MessageBox.Show("Event Load Form sudah berjalan", "DEBUG Load Event",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            SetupComboBoxKategori();
             LoadDataBuku();
             SetupInputRestrictions();
+        }
+
+        private void SetupComboBoxKategori()
+        {
+            cmbKategori.Items.Clear();
+            cmbKategori.Items.Add("Fiksi IT");
+            cmbKategori.Items.Add("Non-Fiksi IT");
+            cmbKategori.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void LoadDataBuku()
@@ -33,9 +49,9 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
                     string query = @"
-                        SELECT kode_buku, judul, pengarang, penerbit, 
-                               tahun_terbit, stok_total, stok_tersedia, lokasi 
-                        FROM BUKU 
+                        SELECT kode_buku, judul, pengarang, penerbit,
+                               tahun_terbit, kategori, stok_tersedia, lokasi
+                        FROM BUKU
                         WHERE id_buku = @idBuku";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -49,16 +65,21 @@ namespace ProjectAplikasiPerpustakaan
                                 txtKodeBuku.Text = reader["kode_buku"].ToString();
                                 txtJudulBuku.Text = reader["judul"].ToString();
                                 txtPengarang.Text = reader["pengarang"].ToString();
-                                txtPenerbit.Text = reader["penerbit"].ToString();
-                                txtTahunTerbit.Text = reader["tahun_terbit"].ToString();
-                                txtStokTotal.Text = reader["stok_total"].ToString();
+                                txtPenerbit.Text = reader["penerbit"]?.ToString() ?? "";
+                                txtTahunTerbit.Text = reader["tahun_terbit"]?.ToString() ?? "";
                                 txtStokTersedia.Text = reader["stok_tersedia"].ToString();
-                                txtLokasi.Text = reader["lokasi"].ToString();
+                                txtLokasi.Text = reader["lokasi"]?.ToString() ?? "";
+
+                                string kategori = reader["kategori"]?.ToString()?.Trim() ?? "";
+                                if (!string.IsNullOrEmpty(kategori))
+                                {
+                                    cmbKategori.SelectedItem = kategori;
+                                }
                             }
                             else
                             {
-                                MessageBox.Show("Data buku tidak ditemukan!", "Error",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show($"Data buku dengan ID {idBuku} tidak ditemukan!",
+                                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 this.Close();
                             }
                         }
@@ -72,36 +93,67 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
-        // ================== TOMBOL UPDATE ==================
+        private void SetupInputRestrictions()
+        {
+            txtKodeBuku.MaxLength = 20;
+            txtJudulBuku.MaxLength = 200;
+            txtPengarang.MaxLength = 100;
+            txtPenerbit.MaxLength = 100;
+            txtLokasi.MaxLength = 50;
+            txtTahunTerbit.MaxLength = 4;
+            txtStokTersedia.MaxLength = 5;
+
+            txtKodeBuku.KeyPress += (s, ev) => { if (!char.IsLetterOrDigit(ev.KeyChar) && ev.KeyChar != '-' && ev.KeyChar != '\b') ev.Handled = true; };
+            txtJudulBuku.KeyPress += AllowAlphanumericWithSpace;
+            txtPengarang.KeyPress += AllowAlphanumericWithSpace;
+            txtPenerbit.KeyPress += AllowAlphanumericWithSpace;
+            txtLokasi.KeyPress += AllowAlphanumericWithSpace;
+            txtTahunTerbit.KeyPress += AllowOnlyNumbers;
+            txtStokTersedia.KeyPress += AllowOnlyNumbers;
+        }
+
+        private void AllowAlphanumericWithSpace(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsLetterOrDigit(e.KeyChar) && !char.IsWhiteSpace(e.KeyChar) && e.KeyChar != '\b')
+                e.Handled = true;
+        }
+
+        private void AllowOnlyNumbers(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
+                e.Handled = true;
+        }
+
+        private void btlBatal_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void txtKodeBuku_TextChanged(object sender, EventArgs e) { }
+        private void txtJudulBuku_TextChanged(object sender, EventArgs e) { }
+        private void txtPengarang_TextChanged(object sender, EventArgs e) { }
+        private void txtPenerbit_TextChanged(object sender, EventArgs e) { }
+        private void txtTahunTerbit_TextChanged(object sender, EventArgs e) { }
+        private void txtStokTersedia_TextChanged(object sender, EventArgs e) { }
+        private void txtLokasi_TextChanged(object sender, EventArgs e) { }
+        private void cmbKategori_SelectedIndexChanged(object sender, EventArgs e) { }
+
         private void btlUpdateBuku_Click(object sender, EventArgs e)
         {
+            // Validasi
             if (string.IsNullOrWhiteSpace(txtKodeBuku.Text) ||
                 string.IsNullOrWhiteSpace(txtJudulBuku.Text) ||
-                string.IsNullOrWhiteSpace(txtPengarang.Text))
+                string.IsNullOrWhiteSpace(txtPengarang.Text) ||
+                cmbKategori.SelectedIndex == -1)
             {
-                MessageBox.Show("Kode Buku, Judul, dan Pengarang harus diisi!",
+                MessageBox.Show("Kode Buku, Judul, Pengarang, dan Kategori harus diisi!",
                     "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!int.TryParse(txtTahunTerbit.Text, out int tahun) || tahun < 1900)
+            if (!int.TryParse(txtStokTersedia.Text, out int stok) || stok < 0)
             {
-                MessageBox.Show("Tahun terbit tidak valid!",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!int.TryParse(txtStokTotal.Text, out int stokTotal) || stokTotal < 0)
-            {
-                MessageBox.Show("Stok Total harus angka positif!",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!int.TryParse(txtStokTersedia.Text, out int stokTersedia) ||
-                stokTersedia < 0 || stokTersedia > stokTotal)
-            {
-                MessageBox.Show("Stok Tersedia harus antara 0 sampai Stok Total!",
+                MessageBox.Show("Stok Tersedia harus angka positif!",
                     "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -112,36 +164,34 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
                     string query = @"
-                        UPDATE BUKU 
+                        UPDATE BUKU
                         SET kode_buku = @kode,
                             judul = @judul,
                             pengarang = @pengarang,
                             penerbit = @penerbit,
                             tahun_terbit = @tahun,
-                            stok_total = @stokTotal,
+                            kategori = @kategori,
                             stok_tersedia = @stokTersedia,
                             lokasi = @lokasi
                         WHERE id_buku = @idBuku";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        cmd.Parameters.AddWithValue("@kode", txtKodeBuku.Text.Trim());
+                        cmd.Parameters.AddWithValue("@kode", txtKodeBuku.Text.Trim().ToUpper());
                         cmd.Parameters.AddWithValue("@judul", txtJudulBuku.Text.Trim());
                         cmd.Parameters.AddWithValue("@pengarang", txtPengarang.Text.Trim());
-                        cmd.Parameters.AddWithValue("@penerbit", txtPenerbit.Text.Trim());
-                        cmd.Parameters.AddWithValue("@tahun", tahun);
-                        cmd.Parameters.AddWithValue("@stokTotal", stokTotal);
-                        cmd.Parameters.AddWithValue("@stokTersedia", stokTersedia);
-                        cmd.Parameters.AddWithValue("@lokasi", txtLokasi.Text.Trim());
+                        cmd.Parameters.AddWithValue("@penerbit", string.IsNullOrWhiteSpace(txtPenerbit.Text) ? (object)DBNull.Value : txtPenerbit.Text.Trim());
+                        cmd.Parameters.AddWithValue("@tahun", string.IsNullOrWhiteSpace(txtTahunTerbit.Text) ? (object)DBNull.Value : txtTahunTerbit.Text.Trim());
+                        cmd.Parameters.AddWithValue("@kategori", cmbKategori.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@stokTersedia", stok);
+                        cmd.Parameters.AddWithValue("@lokasi", string.IsNullOrWhiteSpace(txtLokasi.Text) ? (object)DBNull.Value : txtLokasi.Text.Trim());
                         cmd.Parameters.AddWithValue("@idBuku", idBuku);
 
                         int result = cmd.ExecuteNonQuery();
-
                         if (result > 0)
                         {
-                            MessageBox.Show("Data buku berhasil diperbarui!",
-                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                            MessageBox.Show("✅ Data buku berhasil diperbarui!", "Sukses",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.DialogResult = DialogResult.OK;
                             this.Close();
                         }
@@ -150,123 +200,20 @@ namespace ProjectAplikasiPerpustakaan
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memperbarui data buku:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal update data:\n" + ex.Message, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
         }
 
-        // ================== TOMBOL BATAL ==================
-        private void btlBatal_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Batalkan perubahan data buku?", "Konfirmasi",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
-            }
-        }
-
+        // ================== UNTUK MENGHILANGKAN ERROR DESIGNER ==================
         private void EditBuku_Load_1(object sender, EventArgs e)
         {
             LoadDataBuku();
         }
 
 
-        private void txtKodeBuku_TextChanged(object sender, EventArgs e)
-        {
 
-        }
 
-        private void txtJudulBuku_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtPengarang_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtPenerbit_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTahunTerbit_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtStokTotal_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtStokTersedia_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtLokasi_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void SetupInputRestrictions()
-        {
-            // Kode Buku → Huruf, Angka, dan "-"
-            txtKodeBuku.KeyPress += (s, e) =>
-            {
-                if (!char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '\b')
-                    e.Handled = true;
-            };
-            txtKodeBuku.MaxLength = 20;
-
-            // Judul Buku → Huruf, Angka, Spasi
-            txtJudulBuku.KeyPress += AllowAlphanumericWithSpace;
-            txtJudulBuku.MaxLength = 200;
-
-            // Pengarang → Huruf, Angka, Spasi
-            txtPengarang.KeyPress += AllowAlphanumericWithSpace;
-            txtPengarang.MaxLength = 100;
-
-            // Penerbit → Huruf, Angka, Spasi
-            txtPenerbit.KeyPress += AllowAlphanumericWithSpace;
-            txtPenerbit.MaxLength = 100;
-
-            // Tahun Terbit → Hanya Angka
-            txtTahunTerbit.KeyPress += AllowOnlyNumbers;
-            txtTahunTerbit.MaxLength = 4;
-
-            // Stok Total → Hanya Angka
-            txtStokTotal.KeyPress += AllowOnlyNumbers;
-            txtStokTotal.MaxLength = 5;
-
-            // Stok Tersedia → Hanya Angka
-            txtStokTersedia.KeyPress += AllowOnlyNumbers;
-            txtStokTersedia.MaxLength = 5;
-
-            // Lokasi → Huruf, Angka, Spasi
-            txtLokasi.KeyPress += AllowAlphanumericWithSpace;
-            txtLokasi.MaxLength = 50;
-        }
-
-        private void AllowAlphanumericWithSpace(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsLetterOrDigit(e.KeyChar) &&
-                !char.IsWhiteSpace(e.KeyChar) &&
-                e.KeyChar != '\b')
-            {
-                e.Handled = true;
-            }
-        }
-
-        private void AllowOnlyNumbers(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsDigit(e.KeyChar) && e.KeyChar != '\b')
-            {
-                e.Handled = true;
-            }
-        }
     }
 }
