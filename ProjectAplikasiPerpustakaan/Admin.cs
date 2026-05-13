@@ -286,22 +286,38 @@ namespace ProjectAplikasiPerpustakaan
 
         private void CariBukuByKeyword()
         {
-            if (dtBuku == null) return;
-
             string keyword = txtCariBuku.Text.Trim();
 
-            if (string.IsNullOrEmpty(keyword))
+            try
             {
-                dataGridView1.DataSource = dtBuku;
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    if (string.IsNullOrEmpty(keyword))
+                    {
+                        LoadDataBuku();
+                        return;
+                    }
+
+                    using (SqlCommand cmd =
+                        new SqlCommand("sp_SearchAdminBuku", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@keyword", keyword);
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            dtBuku = new DataTable();
+                            da.Fill(dtBuku);
+                            dataGridView1.DataSource = dtBuku;
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DataView dv = dtBuku.DefaultView;
-                dv.RowFilter = $"judul LIKE '%{keyword}%' " +
-                               $"OR pengarang LIKE '%{keyword}%' " +
-                               $"OR kategori LIKE '%{keyword}%' " +
-                               $"OR kode_buku LIKE '%{keyword}%'";
-                dataGridView1.DataSource = dv;
+                MessageBox.Show("Gagal mencari buku:\n" + ex.Message);
             }
         }
 
