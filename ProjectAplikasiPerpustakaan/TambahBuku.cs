@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
@@ -136,20 +137,26 @@ namespace ProjectAplikasiPerpustakaan
         {
             // Validasi input wajib
             if (string.IsNullOrWhiteSpace(txtKodeBuku.Text) ||
-                string.IsNullOrWhiteSpace(txtJudul.Text) ||
-                string.IsNullOrWhiteSpace(txtPengarang.Text) ||
-                cmbKategori.SelectedIndex == -1 ||
-                string.IsNullOrWhiteSpace(txtStokTersedia.Text))
+       string.IsNullOrWhiteSpace(txtJudul.Text) ||
+       string.IsNullOrWhiteSpace(txtPengarang.Text) ||
+       cmbKategori.SelectedIndex == -1 ||
+       string.IsNullOrWhiteSpace(txtStokTersedia.Text))
             {
-                MessageBox.Show("Kode Buku, Judul, Pengarang, Kategori, dan Stok Tersedia wajib diisi!",
-                    "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Kode Buku, Judul, Pengarang, Kategori, dan Stok Tersedia wajib diisi!",
+                    "Peringatan",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return;
             }
 
             if (!int.TryParse(txtStokTersedia.Text, out int stokTersedia) || stokTersedia < 0)
             {
-                MessageBox.Show("Stok Tersedia harus berupa angka positif!", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Stok Tersedia harus berupa angka positif!",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
                 return;
             }
 
@@ -159,55 +166,68 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
 
-                    string query = @"
-                INSERT INTO BUKU
-                (kode_buku, judul, pengarang, penerbit, tahun_terbit, kategori,
-                 stok_tersedia, lokasi)
-                VALUES
-                (@kode_buku, @judul, @pengarang, @penerbit, @tahun_terbit, @kategori,
-                 @stok_tersedia, @lokasi)";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand("sp_TambahBuku", conn))
                     {
-                        cmd.Parameters.AddWithValue("@kode_buku", txtKodeBuku.Text.Trim().ToUpper());
-                        cmd.Parameters.AddWithValue("@judul", txtJudul.Text.Trim());
-                        cmd.Parameters.AddWithValue("@pengarang", txtPengarang.Text.Trim());
+                        cmd.CommandType = CommandType.StoredProcedure;
 
-                        // Parameter yang boleh NULL (HARUS di-cast ke object)
+                        cmd.Parameters.AddWithValue("@kode_buku",
+                            txtKodeBuku.Text.Trim().ToUpper());
+
+                        cmd.Parameters.AddWithValue("@judul",
+                            txtJudul.Text.Trim());
+
+                        cmd.Parameters.AddWithValue("@pengarang",
+                            txtPengarang.Text.Trim());
+
                         cmd.Parameters.AddWithValue("@penerbit",
-                            string.IsNullOrWhiteSpace(txtPenerbit.Text) ? (object)DBNull.Value : txtPenerbit.Text.Trim());
+                            string.IsNullOrWhiteSpace(txtPenerbit.Text)
+                            ? (object)DBNull.Value
+                            : txtPenerbit.Text.Trim());
 
                         cmd.Parameters.AddWithValue("@tahun_terbit",
-                            string.IsNullOrWhiteSpace(txtTahunTerbit.Text) ? (object)DBNull.Value : txtTahunTerbit.Text.Trim());
+                            string.IsNullOrWhiteSpace(txtTahunTerbit.Text)
+                            ? (object)DBNull.Value
+                            : Convert.ToInt32(txtTahunTerbit.Text));
 
-                        cmd.Parameters.AddWithValue("@kategori", cmbKategori.SelectedItem.ToString());
+                        cmd.Parameters.AddWithValue("@kategori",
+                            cmbKategori.SelectedItem.ToString());
 
-                        cmd.Parameters.AddWithValue("@stok_tersedia", stokTersedia);
+                        cmd.Parameters.AddWithValue("@stok_tersedia",
+                            stokTersedia);
 
                         cmd.Parameters.AddWithValue("@lokasi",
-                            string.IsNullOrWhiteSpace(txtLokasi.Text) ? (object)DBNull.Value : txtLokasi.Text.Trim());
+                            string.IsNullOrWhiteSpace(txtLokasi.Text)
+                            ? (object)DBNull.Value
+                            : txtLokasi.Text.Trim());
 
-                        int result = cmd.ExecuteNonQuery();
+                        cmd.ExecuteNonQuery();
 
-                        if (result > 0)
-                        {
-                            MessageBox.Show("✅ Buku berhasil ditambahkan!",
-                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            ClearForm();
-                            txtKodeBuku.Focus();
-                        }
+                        MessageBox.Show(
+                            "✅ Buku berhasil ditambahkan!",
+                            "Sukses",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
+
+                        ClearForm();
+                        txtKodeBuku.Focus();
                     }
                 }
             }
-            catch (SqlException ex) when (ex.Number == 2627 || ex.Message.Contains("duplicate"))
+            catch (SqlException ex)
             {
-                MessageBox.Show("Kode Buku sudah ada di database!\nSilakan gunakan kode lain.",
-                    "Duplikat Kode Buku", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Database Error:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Terjadi kesalahan saat menambahkan buku:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "Terjadi kesalahan:\n" + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
