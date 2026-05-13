@@ -28,16 +28,13 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
 
-                    using (SqlCommand cmd = new SqlCommand("sp_GetAllBuku", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
+                    string query = "SELECT * FROM vw_DaftarBuku ORDER BY judul ASC";
 
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                        {
-                            dtBuku = new DataTable();
-                            da.Fill(dtBuku);
-                            dataGridView1.DataSource = dtBuku;
-                        }
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                    {
+                        dtBuku = new DataTable();
+                        da.Fill(dtBuku);
+                        dataGridView1.DataSource = dtBuku;
                     }
 
                     dataGridView1.AutoSizeColumnsMode =
@@ -71,25 +68,31 @@ namespace ProjectAplikasiPerpustakaan
                 {
                     conn.Open();
 
-                    SqlCommand cmd;
-
                     if (string.IsNullOrEmpty(keyword))
                     {
-                        cmd = new SqlCommand("sp_GetAllBuku", conn);
+                        string query = "SELECT * FROM vw_DaftarBuku ORDER BY judul ASC";
+
+                        using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                        {
+                            dtBuku = new DataTable();
+                            da.Fill(dtBuku);
+                            dataGridView1.DataSource = dtBuku;
+                        }
                     }
                     else
                     {
-                        cmd = new SqlCommand("sp_SearchBuku", conn);
-                        cmd.Parameters.AddWithValue("@keyword", keyword);
-                    }
+                        using (SqlCommand cmd = new SqlCommand("sp_SearchBuku", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@keyword", keyword);
 
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    {
-                        dtBuku = new DataTable();
-                        da.Fill(dtBuku);
-                        dataGridView1.DataSource = dtBuku;
+                            using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                            {
+                                dtBuku = new DataTable();
+                                da.Fill(dtBuku);
+                                dataGridView1.DataSource = dtBuku;
+                            }
+                        }
                     }
 
                     if (dataGridView1.Columns["id_buku"] != null)
