@@ -105,6 +105,41 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
+        private void CariBukuByKeyword1()
+        {
+            string keyword = txtCariBuku.Text.Trim();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                SELECT *
+                FROM vw_AllBuku
+                WHERE judul LIKE '%" + keyword + @"%'
+                   OR pengarang LIKE '%" + keyword + @"%'
+                   OR kategori LIKE '%" + keyword + @"%'
+                   OR kode_buku LIKE '%" + keyword + @"%'";
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
+                    {
+                        dtBuku = new DataTable();
+                        da.Fill(dtBuku);
+                        dataGridView1.DataSource = dtBuku;
+                    }
+
+                    if (dataGridView1.Columns["id_buku"] != null)
+                        dataGridView1.Columns["id_buku"].Visible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal mencari buku:\n" + ex.Message);
+            }
+        }
+
         private void txtCariBuku_TextChanged(object sender, EventArgs e)
         {
             CariBukuByKeyword();
