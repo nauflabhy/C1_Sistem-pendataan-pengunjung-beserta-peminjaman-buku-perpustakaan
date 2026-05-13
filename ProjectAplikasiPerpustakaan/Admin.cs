@@ -231,19 +231,16 @@ namespace ProjectAplikasiPerpustakaan
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "DELETE FROM BUKU WHERE id_buku = @id_buku";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand("sp_DeleteBuku", conn))
                     {
+                        cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@id_buku", idBuku);
+
                         int result = cmd.ExecuteNonQuery();
 
                         if (result > 0)
                         {
-                            MessageBox.Show("Buku berhasil dihapus dari database.",
-                                "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            // Refresh data sesuai dengan pencarian saat ini
+                            MessageBox.Show("Buku berhasil dihapus.");
                             CariBukuByKeyword();
                         }
                     }
