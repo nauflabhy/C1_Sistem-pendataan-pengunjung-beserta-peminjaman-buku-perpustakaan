@@ -9,14 +9,30 @@ namespace ProjectAplikasiPerpustakaan
         private readonly string connectionString =
         "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
         private DataTable dtLaporan;
+        private BindingSource bsLaporan = new BindingSource();
         public CetakLaporan()
         {
             InitializeComponent();
         }
         private void CetakLaporan_Load(object sender, EventArgs e)
         {
+            bindingNavigator1.BindingSource = bsLaporan; 
+
+            bsLaporan.PositionChanged += bsLaporan_PositionChanged;
+
             LoadDataLaporan();
         }
+
+
+        private void bsLaporan_PositionChanged(object sender, EventArgs e)
+        {
+            if (dgvLaporan.Rows.Count > 0)
+            {
+                dgvLaporan.ClearSelection();
+                dgvLaporan.Rows[bsLaporan.Position].Selected = true;
+            }
+        }
+
         // ================== LOAD DATA PENGEMBALIAN ==================
         private void LoadDataLaporan()
         {
@@ -32,7 +48,8 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         dtLaporan = new DataTable();
                         adapter.Fill(dtLaporan);
-                        dgvLaporan.DataSource = dtLaporan;
+                        bsLaporan.DataSource = dtLaporan;
+                        dgvLaporan.DataSource = bsLaporan;
 
                         if (dgvLaporan.Columns.Count > 0)
                         {

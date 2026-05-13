@@ -14,6 +14,7 @@ namespace ProjectAplikasiPerpustakaan
         private readonly int idUser;
         private readonly string namaAdmin;
         private readonly string roleAdmin;
+        private BindingSource bsPengajuan = new BindingSource();
 
         public btnKembali(int idUser, string namaAdmin, string roleAdmin)
         {
@@ -26,9 +27,22 @@ namespace ProjectAplikasiPerpustakaan
 
         private void DaftarPengajuan_Load(object sender, EventArgs e)
         {
-            // Pengaturan awal DataGridView
             SetupDataGridView();
+
+            bindingNavigator1.BindingSource = bsPengajuan;   // 🔥 INI PENTING
+
+            bsPengajuan.PositionChanged += bsPengajuan_PositionChanged; // bonus
+
             LoadDataPengajuan();
+        }
+
+        private void bsPengajuan_PositionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count > 0)
+            {
+                dataGridView1.ClearSelection();
+                dataGridView1.Rows[bsPengajuan.Position].Selected = true;
+            }
         }
 
         private void SetupDataGridView()
@@ -82,8 +96,8 @@ namespace ProjectAplikasiPerpustakaan
                     // reset datasource dulu
                     dataGridView1.DataSource = null;
 
-                    // isi ulang
-                    dataGridView1.DataSource = dtPengajuan;
+                    bsPengajuan.DataSource = dtPengajuan;
+                    dataGridView1.DataSource = bsPengajuan;
 
                     // refresh tampilan
                     dataGridView1.Refresh();

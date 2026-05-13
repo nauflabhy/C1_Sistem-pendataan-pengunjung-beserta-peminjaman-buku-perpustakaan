@@ -12,6 +12,7 @@ namespace ProjectAplikasiPerpustakaan
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtDipinjam;
+        private BindingSource bsBuku = new BindingSource();
 
         public BukuDipinjamPengunjung()
         {
@@ -51,7 +52,8 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         dtDipinjam = new DataTable();
                         da.Fill(dtDipinjam);
-                        dataGridView1.DataSource = dtDipinjam;
+                        bsBuku.DataSource = dtDipinjam;
+                        dataGridView1.DataSource = bsBuku;
                     }
 
                     if (dataGridView1.Columns["id_peminjaman"] != null)

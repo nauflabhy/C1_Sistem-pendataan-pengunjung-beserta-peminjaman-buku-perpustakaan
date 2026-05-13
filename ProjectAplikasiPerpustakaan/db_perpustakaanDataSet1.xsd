@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="db_perpustakaanDataSet1" targetNamespace="http://tempuri.org/db_perpustakaanDataSet1.xsd" xmlns:mstns="http://tempuri.org/db_perpustakaanDataSet1.xsd" xmlns="http://tempuri.org/db_perpustakaanDataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="db_perpustakaanConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="db_perpustakaanConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.ProjectAplikasiPerpustakaan.Properties.Settings.GlobalReference.Default.db_perpustakaanConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables>
+          <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="vw_DaftarBukuTableAdapter" GeneratorDataComponentClassName="vw_DaftarBukuTableAdapter" Name="vw_DaftarBuku" UserDataComponentName="vw_DaftarBukuTableAdapter">
+            <MainSource>
+              <DbSource ConnectionRef="db_perpustakaanConnectionString (Settings)" DbObjectName="db_perpustakaan.dbo.vw_DaftarBuku" DbObjectType="View" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetData" UserSourceName="Fill">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT id_buku, kode_buku, judul, pengarang, penerbit, tahun_terbit, kategori, stok_tersedia, lokasi FROM dbo.vw_DaftarBuku</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </MainSource>
+            <Mappings>
+              <Mapping SourceColumn="id_buku" DataSetColumn="id_buku" />
+              <Mapping SourceColumn="kode_buku" DataSetColumn="kode_buku" />
+              <Mapping SourceColumn="judul" DataSetColumn="judul" />
+              <Mapping SourceColumn="pengarang" DataSetColumn="pengarang" />
+              <Mapping SourceColumn="penerbit" DataSetColumn="penerbit" />
+              <Mapping SourceColumn="tahun_terbit" DataSetColumn="tahun_terbit" />
+              <Mapping SourceColumn="kategori" DataSetColumn="kategori" />
+              <Mapping SourceColumn="stok_tersedia" DataSetColumn="stok_tersedia" />
+              <Mapping SourceColumn="lokasi" DataSetColumn="lokasi" />
+            </Mappings>
+            <Sources />
+          </TableAdapter>
+        </Tables>
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="db_perpustakaanDataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_UserDSName="db_perpustakaanDataSet1" msprop:Generator_DataSetName="db_perpustakaanDataSet1">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vw_DaftarBuku" msprop:Generator_RowEvHandlerName="vw_DaftarBukuRowChangeEventHandler" msprop:Generator_RowDeletedName="vw_DaftarBukuRowDeleted" msprop:Generator_RowDeletingName="vw_DaftarBukuRowDeleting" msprop:Generator_RowEvArgName="vw_DaftarBukuRowChangeEvent" msprop:Generator_TablePropName="vw_DaftarBuku" msprop:Generator_RowChangedName="vw_DaftarBukuRowChanged" msprop:Generator_RowChangingName="vw_DaftarBukuRowChanging" msprop:Generator_TableClassName="vw_DaftarBukuDataTable" msprop:Generator_RowClassName="vw_DaftarBukuRow" msprop:Generator_TableVarName="tablevw_DaftarBuku" msprop:Generator_UserTableName="vw_DaftarBuku">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id_buku" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnPropNameInRow="id_buku" msprop:Generator_ColumnPropNameInTable="id_bukuColumn" msprop:Generator_ColumnVarNameInTable="columnid_buku" msprop:Generator_UserColumnName="id_buku" type="xs:int" />
+              <xs:element name="kode_buku" msprop:Generator_ColumnPropNameInRow="kode_buku" msprop:Generator_ColumnPropNameInTable="kode_bukuColumn" msprop:Generator_ColumnVarNameInTable="columnkode_buku" msprop:Generator_UserColumnName="kode_buku">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="judul" msprop:Generator_ColumnPropNameInRow="judul" msprop:Generator_ColumnPropNameInTable="judulColumn" msprop:Generator_ColumnVarNameInTable="columnjudul" msprop:Generator_UserColumnName="judul">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="200" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="pengarang" msprop:Generator_ColumnPropNameInRow="pengarang" msprop:Generator_ColumnPropNameInTable="pengarangColumn" msprop:Generator_ColumnVarNameInTable="columnpengarang" msprop:Generator_UserColumnName="pengarang">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="penerbit" msprop:Generator_ColumnPropNameInRow="penerbit" msprop:Generator_ColumnPropNameInTable="penerbitColumn" msprop:Generator_ColumnVarNameInTable="columnpenerbit" msprop:Generator_UserColumnName="penerbit" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="100" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="tahun_terbit" msprop:Generator_ColumnPropNameInRow="tahun_terbit" msprop:Generator_ColumnPropNameInTable="tahun_terbitColumn" msprop:Generator_ColumnVarNameInTable="columntahun_terbit" msprop:Generator_UserColumnName="tahun_terbit" type="xs:int" minOccurs="0" />
+              <xs:element name="kategori" msprop:Generator_ColumnPropNameInRow="kategori" msprop:Generator_ColumnPropNameInTable="kategoriColumn" msprop:Generator_ColumnVarNameInTable="columnkategori" msprop:Generator_UserColumnName="kategori" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="stok_tersedia" msprop:Generator_ColumnPropNameInRow="stok_tersedia" msprop:Generator_ColumnPropNameInTable="stok_tersediaColumn" msprop:Generator_ColumnVarNameInTable="columnstok_tersedia" msprop:Generator_UserColumnName="stok_tersedia" type="xs:int" />
+              <xs:element name="lokasi" msprop:Generator_ColumnPropNameInRow="lokasi" msprop:Generator_ColumnPropNameInTable="lokasiColumn" msprop:Generator_ColumnVarNameInTable="columnlokasi" msprop:Generator_UserColumnName="lokasi" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:vw_DaftarBuku" />
+      <xs:field xpath="mstns:id_buku" />
+    </xs:unique>
+  </xs:element>
+</xs:schema>

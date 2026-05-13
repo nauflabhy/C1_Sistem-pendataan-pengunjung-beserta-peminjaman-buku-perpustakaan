@@ -83,6 +83,16 @@
     <Compile Include="DataPeminjaman.Designer.cs">
       <DependentUpon>DataPeminjaman.cs</DependentUpon>
     </Compile>
+    <Compile Include="db_perpustakaanDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>db_perpustakaanDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="db_perpustakaanDataSet1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>db_perpustakaanDataSet1.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DetailBuku.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,6 +212,28 @@
     <EmbeddedResource Include="FormPengembalian.resx">
       <DependentUpon>FormPengembalian.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="db_perpustakaanDataSet.xsc">
+      <DependentUpon>db_perpustakaanDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="db_perpustakaanDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>db_perpustakaanDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="db_perpustakaanDataSet.xss">
+      <DependentUpon>db_perpustakaanDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="db_perpustakaanDataSet1.xsc">
+      <DependentUpon>db_perpustakaanDataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="db_perpustakaanDataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>db_perpustakaanDataSet1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="db_perpustakaanDataSet1.xss">
+      <DependentUpon>db_perpustakaanDataSet1.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

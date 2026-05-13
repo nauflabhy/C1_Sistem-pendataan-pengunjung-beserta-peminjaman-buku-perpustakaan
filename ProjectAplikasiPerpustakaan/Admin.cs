@@ -32,13 +32,16 @@ namespace ProjectAplikasiPerpustakaan
         // ================== FORM LOAD (TIDAK load data otomatis) ==================
         private void Admin_Load(object sender, EventArgs e)
         {
+            // TODO: This line of code loads data into the 'db_perpustakaanDataSet1.vw_DaftarBuku' table. You can move, or remove it, as needed.
+            this.vw_DaftarBukuTableAdapter.Fill(this.db_perpustakaanDataSet1.vw_DaftarBuku);
+            // TODO: This line of code loads data into the 'db_perpustakaanDataSet.BUKU' table. You can move, or remove it, as needed.
+            this.bUKUTableAdapter.Fill(this.db_perpustakaanDataSet.BUKU);
             if (!string.IsNullOrEmpty(namaAdmin))
             {
                 this.Text = $"Admin Panel - {namaAdmin}";
             }
 
-            // TIDAK memanggil LoadDataBuku() lagi
-            // Data akan muncul hanya setelah tombol Load Database ditekan
+            bindingNavigator1.BindingSource = bsBuku;
         }
 
         // ================== LOAD DAFTAR BUKU ==================
@@ -131,12 +134,6 @@ namespace ProjectAplikasiPerpustakaan
                 MessageBox.Show("Gagal membuka daftar pengajuan:\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        // ================== TOMBOL DAFTAR PENGGUNA ==================
-        private void btnPengguna_Click(object sender, EventArgs e)
-        {
-
         }
 
         // ================== TOMBOL LAPORAN ==================

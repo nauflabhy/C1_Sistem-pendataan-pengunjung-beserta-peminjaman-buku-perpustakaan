@@ -11,8 +11,8 @@ namespace ProjectAplikasiPerpustakaan
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtBuku;
+        private BindingSource bsBuku = new BindingSource();
 
-        // Constructor untuk user yang sudah login
         public CariBuku()
         {
             InitializeComponent();
@@ -34,7 +34,8 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         dtBuku = new DataTable();
                         da.Fill(dtBuku);
-                        dataGridView1.DataSource = dtBuku;
+                        bsBuku.DataSource = dtBuku;
+                        dataGridView1.DataSource = bsBuku;
                     }
 
                     dataGridView1.AutoSizeColumnsMode =
@@ -48,13 +49,14 @@ namespace ProjectAplikasiPerpustakaan
             {
                 MessageBox.Show("Gagal memuat data buku:\n" + ex.Message);
             }
+
         }
 
         // ================== TOMBOL LOAD DATABASE ==================
         private void btnLoadDatabase_Click(object sender, EventArgs e)
         {
             LoadDataBuku();
-            txtCariBuku.Focus(); // Fokus ke textbox pencarian setelah load
+            txtCariBuku.Focus(); 
         }
 
         // ================== PENCARIAN OTOMATIS ==================
@@ -76,7 +78,8 @@ namespace ProjectAplikasiPerpustakaan
                         {
                             dtBuku = new DataTable();
                             da.Fill(dtBuku);
-                            dataGridView1.DataSource = dtBuku;
+                            bsBuku.DataSource = dtBuku;
+                            dataGridView1.DataSource = bsBuku;
                         }
                     }
                     else
@@ -129,7 +132,8 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         dtBuku = new DataTable();
                         da.Fill(dtBuku);
-                        dataGridView1.DataSource = dtBuku;
+                        bsBuku.DataSource = dtBuku;
+                        dataGridView1.DataSource = bsBuku;
                     }
 
                     if (dataGridView1.Columns["id_buku"] != null)
@@ -156,8 +160,9 @@ namespace ProjectAplikasiPerpustakaan
         // ================== FORM LOAD (Hanya inisialisasi, tidak load data) ==================
         private void CariBuku_Load(object sender, EventArgs e)
         {
-            // TIDAK memanggil LoadDataBuku() lagi
-            // Form akan kosong saat pertama dibuka
+            txtCariBuku.Focus();
+
+            bindingNavigator1.BindingSource = bsBuku;
             txtCariBuku.Focus();
         }
 
@@ -234,12 +239,9 @@ namespace ProjectAplikasiPerpustakaan
         {
             try
             {
-                // Membuka form BukuDipinjamPengunjung
                 BukuDipinjamPengunjung formRiwayat = new BukuDipinjamPengunjung();
-                formRiwayat.ShowDialog();   // Gunakan ShowDialog agar user harus selesai dulu
+                formRiwayat.ShowDialog();
 
-                // Optional: Refresh data buku setelah melihat riwayat
-                // LoadDataBuku();
             }
             catch (Exception ex)
             {
@@ -250,20 +252,19 @@ namespace ProjectAplikasiPerpustakaan
             }
         }
 
-        // Event kosong (bisa dihapus jika tidak dipakai)
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                // Membuat instance form LoginMenu
+
                 LoginMenu formLogin = new LoginMenu();
 
-                // Menampilkan form Login
+
                 formLogin.Show();
 
-                // Menyembunyikan form CariBuku saat ini
+
                 this.Hide();
             }
             catch (Exception ex)
