@@ -50,18 +50,9 @@ namespace ProjectAplikasiPerpustakaan
                     conn.Open();
 
                     string query = @"
-                        SELECT 
-                            id_buku,
-                            kode_buku,
-                            judul,
-                            pengarang,
-                            penerbit,
-                            tahun_terbit,
-                            kategori,
-                            stok_tersedia,
-                            lokasi
-                        FROM BUKU 
-                        ORDER BY judul ASC";
+                SELECT *
+                FROM vw_AdminDaftarBuku
+                ORDER BY judul ASC";
 
                     using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
                     {
@@ -70,23 +61,22 @@ namespace ProjectAplikasiPerpustakaan
                         dataGridView1.DataSource = dtBuku;
                     }
 
-                    // Pengaturan tampilan DataGridView
-                    dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dataGridView1.AutoSizeColumnsMode =
+                        DataGridViewAutoSizeColumnsMode.Fill;
                     dataGridView1.ReadOnly = true;
                     dataGridView1.AllowUserToAddRows = false;
                     dataGridView1.AllowUserToDeleteRows = false;
-                    dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+                    dataGridView1.SelectionMode =
+                        DataGridViewSelectionMode.FullRowSelect;
                     dataGridView1.MultiSelect = false;
 
-                    // Sembunyikan kolom ID
                     if (dataGridView1.Columns["id_buku"] != null)
                         dataGridView1.Columns["id_buku"].Visible = false;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal memuat daftar buku:\n" + ex.Message,
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Gagal memuat daftar buku:\n" + ex.Message);
             }
         }
 
