@@ -14,6 +14,7 @@ namespace ProjectAplikasiPerpustakaan
             "Data Source=NAUFAL\\NZO2;Initial Catalog=db_perpustakaan;Integrated Security=True";
 
         private DataTable dtBuku;
+        private BindingSource bsBuku = new BindingSource();
 
         public Admin(int idUser, string nama, string role)
         {
@@ -58,7 +59,9 @@ namespace ProjectAplikasiPerpustakaan
                     {
                         dtBuku = new DataTable();
                         da.Fill(dtBuku);
-                        dataGridView1.DataSource = dtBuku;
+
+                        bsBuku.DataSource = dtBuku;
+                        dataGridView1.DataSource = bsBuku;
                     }
 
                     dataGridView1.AutoSizeColumnsMode =
